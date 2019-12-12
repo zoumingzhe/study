@@ -15,6 +15,8 @@ MD5 的散列结果是（接近）均匀的。
 # 参考
 1.[MD5 散列函数的结果是均匀分布吗？](https://liam.page/2015/08/12/does-the-result-of-md5-hash-function-uniform/)
 
-2.[NameError:name ‘xrange’ is not defined](https://www.cnblogs.com/hdk1993/p/8893991.html)
+2.[信息熵](https://baike.baidu.com/item/%E4%BF%A1%E6%81%AF%E7%86%B5/7302318?fr=aladdin)
 
-3.[md5加密报错解决方法（TypeError: Unicode-objects must be encoded before hashing）](https://www.cnblogs.com/cheng10/p/9995668.html)
+3.[NameError:name ‘xrange’ is not defined](https://www.cnblogs.com/hdk1993/p/8893991.html)
+
+4.[md5加密报错解决方法（TypeError: Unicode-objects must be encoded before hashing）](https://www.cnblogs.com/cheng10/p/9995668.html)
