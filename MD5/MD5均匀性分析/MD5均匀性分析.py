@@ -1,6 +1,7 @@
-from hashlib import md5
-from math import log
 import hashlib
+from math import log
+
+
 
 def entropy(wkList):
     wkSet   = set(wkList)
@@ -23,4 +24,4 @@ if __name__ == '__main__':
                 wkDict[j].append(s[j])
 
     for j in range(32):
-        print(j, '\t', entropy(wkDict[j]))
+        print(j, ':\t', entropy(wkDict[j]))
