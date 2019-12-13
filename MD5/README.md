@@ -8,7 +8,7 @@ MD5由美国密码学家罗纳德·李维斯特（Ronald Linn Rivest）设计，
 2004年，证实**MD5算法无法防止碰撞（collision）**，因此不适用于安全性认证，如SSL公开密钥认证或是数字签名等用途。
 
 # 目录
-[MD5均匀性分析](./MD5均匀性分析)
+[MD5均匀性](./MD5均匀性)
 
 # 参考
 1.[MD5](https://baike.baidu.com/item/MD5/212708?fr=aladdin)
