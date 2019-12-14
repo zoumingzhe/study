@@ -9,7 +9,5 @@
 ## [HASH](./HASH)
 
 ### [MD5](./HASH/MD5)
-[MD5均匀性](./HASH/MD5/MD5均匀性)
 
 ### [SHA1](./HASH/SHA1)
-[SHA1均匀性](./HASH/SHA1/SHA1均匀性)
