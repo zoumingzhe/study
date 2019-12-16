@@ -13,4 +13,4 @@
 SHA1 的散列结果是（接近）均匀的。
 
 # 参考
-1.[信息熵](https://baike.baidu.com/item/%E4%BF%A1%E6%81%AF%E7%86%B5/7302318?fr=aladdin)
+1.[信息熵](https://baike.baidu.com/item/%E4%BF%A1%E6%81%AF%E7%86%B5)
