@@ -4,7 +4,7 @@
 # 目录
 
 ## [文章](./Articles)
-### [加密](./Articles/加密)
+### [安全](./Articles/安全)
 
 ## [HASH](./HASH)
 ### [MD5](./HASH/MD5)
