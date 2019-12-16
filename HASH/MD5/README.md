@@ -11,4 +11,4 @@ MD5由美国密码学家罗纳德·李维斯特（Ronald Linn Rivest）设计，
 [MD5均匀性](./MD5均匀性)
 
 # 参考
-1.[MD5](https://baike.baidu.com/item/MD5/212708?fr=aladdin)
+1.[MD5](https://baike.baidu.com/item/MD5)

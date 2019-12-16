@@ -4,7 +4,7 @@
 # 目录
 
 ## [文章](./Articles)
-[数据摘要算法](./Articles/数据摘要算法.md)
+### [加密](./Articles/加密)
 
 ## [HASH](./HASH)
 ### [MD5](./HASH/MD5)
