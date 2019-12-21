@@ -54,4 +54,4 @@ Hash算法也是现代密码体系中的一个重要组成部分。由于非对�
 # 参考
 1.[HASH](https://baike.baidu.com/item/Hash)
 
-2.[Hash表](https://baike.baidu.com/item/%E5%93%88%E5%B8%8C%E8%A1%A8)
+2.[Hash表](https://baike.baidu.com/item/哈希表)
