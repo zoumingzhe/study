@@ -11,3 +11,5 @@
 ### [SHA1](./HASH/SHA1)
 
 ## [Memory](./Memory)
+
+## [Time](./Time)
