@@ -11,6 +11,6 @@ OpenSSH是SSH（Secure SHell）协议的免费开源实现。
 SSH协议族可以用来进行远程控制，或在计算机之间传送文件。而实现此功能的传统方式，如telnet（终端仿真协议）、rcp ftp、rlogin、rsh都是极为不安全的，并且会使用明文传送密码。OpenSSH提供了服务端后台程序和客户端工具，用来加密远程控制和文件传输过程中的数据，并由此来代替原来的类似服务。
 
 # 参考
-1.[SSL](https://baike.baidu.com/item/ssh/10407)
+1.[SSH](https://baike.baidu.com/item/ssh/10407)
 
 2.[OpenSSH](https://baike.baidu.com/item/OpenSSH)
