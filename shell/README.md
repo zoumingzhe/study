@@ -32,6 +32,7 @@ Shebang（也称为Hashbang）是一个由井号和叹号构成的字符序列#!
  - [mkdir](./archive/mkdir.md)
  - [more](./archive/more.md)
  - [mv](./archive/mv.md)
+ - [nohup](./archive/nohup.md)
  - [ps](./archive/ps.md)
  - [pwd](./archive/pwd.md)
  - [rm](./archive/rm.md)
