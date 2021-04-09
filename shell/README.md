@@ -21,25 +21,32 @@ Shebang（也称为Hashbang）是一个由井号和叹号构成的字符序列#!
 例如，以指令#!/bin/sh开头的文件在执行时会实际调用/bin/sh程序（通常是Bourne shell或兼容的shell，例如bash、dash等）来执行。这行内容也是shell脚本的标准起始行。
 
 # 目录
- - [awk](./archive/awk.md)
- - [cat](./archive/cat.md)
- - [cd](./archive/cd.md)
- - [chmod](./archive/chmod.md)
- - [cp](./archive/cp.md)
- - [grep](./archive/grep.md)
- - [kill](./archive/kill.md)
- - [ls](./archive/ls.md)
- - [mkdir](./archive/mkdir.md)
- - [more](./archive/more.md)
- - [mv](./archive/mv.md)
- - [nohup](./archive/nohup.md)
- - [ps](./archive/ps.md)
- - [pwd](./archive/pwd.md)
- - [rm](./archive/rm.md)
- - [rmdir](./archive/rmdir.md)
- - [sed](./archive/sed.md)
- - [source](./archive/source.md)
- - [su](./archive/su.md)
+| Command                                | Linux | Windows |
+| :------------------------------------- | :---: | :-----: |
+| [awk](./archive/awk.md)                |   Y   |         |
+| [cat](./archive/cat.md)                |   Y   |         |
+| [cd](./archive/cd.md)                  |   Y   |    Y    |
+| [chmod](./archive/chmod.md)            |   Y   |         |
+| [cp](./archive/cp.md)                  |   Y   |         |
+| [dd](./archive/dd.md)                  |   Y   |         |
+| [df](./archive/df.md)                  |   Y   |         |
+| [fdisk](./archive/fdisk.md)            |   Y   |         |
+| [grep](./archive/grep.md)              |   Y   |         |
+| [kill](./archive/kill.md)              |   Y   |         |
+| [ls](./archive/ls.md)                  |   Y   |         |
+| [mkdir](./archive/mkdir.md)            |   Y   |    Y    |
+| [more](./archive/more.md)              |   Y   |         |
+| [mv](./archive/mv.md)                  |   Y   |         |
+| [nohup](./archive/nohup.md)            |   Y   |         |
+| [nslookup](./archive/nslookup.md)      |   Y   |    Y    |
+| [ping](./archive/ping.md)              |   Y   |    Y    |
+| [ps](./archive/ps.md)                  |   Y   |         |
+| [pwd](./archive/pwd.md)                |   Y   |         |
+| [rm](./archive/rm.md)                  |   Y   |         |
+| [rmdir](./archive/rmdir.md)            |   Y   |         |
+| [sed](./archive/sed.md)                |   Y   |         |
+| [source](./archive/source.md)          |   Y   |         |
+| [su](./archive/su.md)                  |   Y   |         |
 
 # 参考
 1.[shell](https://baike.baidu.com/item/shell)
