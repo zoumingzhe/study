@@ -1,7 +1,18 @@
 # GitHub仓库clone失败的解决方法
 中国大陆的GitHub服务很不稳定，导致GitHub仓库clone时经常fatal或者hang，下面介绍几种解决方法。
 
-# 解决方案1：[gitee码云](https://gitee.com/)
+# 解决方案1：ZIP下载
+通过GitHub提供的“Download ZIP”方式下载压缩包文件。
+## 优点
+ - 可以通过迅雷等下载工具实现断点续传。
+## 缺点
+ - 依赖当前网络对GitHub的访问速度，没有任何的提速。
+ - 需要安装迅雷等下载工具，直接通过浏览器下载失败率较高。
+ - ZIP包只是某一分支当前的完全拷贝，无法通过git切换commit和分支，更无法fetch后续commit。
+## 总结
+此种方式只适合获取特定分支当前拷贝，不适合git管理。
+
+# 解决方案2：[gitee码云](https://gitee.com/)
 通过[gitee码云](https://gitee.com/)提供的“从GitHub/GitLab导入仓库”功能将GitHub仓库导入gitee后再clone。
 ## 优点
  - 可以clone并且可以同步GitHub的修改，稳定、快速。
@@ -13,7 +24,7 @@
 ## 总结
 此种方式适合clone大量的小型仓库。
 
-# 解决方案2：GitHub镜像源
+# 解决方案3：GitHub镜像源
 通过将clone的url为镜像源即可通过镜像源clone、push等，但是不能登录访问私有仓库。
 目前，可用的GitHub镜像源：
  - https://gitee.com/mirrors
@@ -36,7 +47,7 @@
 ## 总结
 此种方式适合临时clone公共仓库。
 
-# 解决方案3：depth分割
+# 解决方案4：depth分割
 对于大型仓库其clone和fetch数据量较大，但是每个commit的数据量一般较小。clone和fetch是一次原子操作，一旦出错只能从头开始，但是clone和fetch都有depth选项。可以通过depth来对任务进行分割，只要每次depth比上次增加，就可以源源不断的把内容fetch到本地，并且执行出错时不丢失已经fetch完成的内容。
 ## 优点
  - 没有gitee对于单仓库、单文件的大小的限制。
@@ -47,7 +58,7 @@
 ## 总结
 此种方式适合clone个别的大型仓库。
 
-# 解决方案4：VPN
+# 解决方案5：VPN
 通过VPN访问GitHub。
 ## 优点
  - 除了需要连接VPN，无需其他改造。
