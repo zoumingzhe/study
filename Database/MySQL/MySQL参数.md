@@ -1,6 +1,45 @@
 # MySQL参数
 
 ## InnoDB Startup Options and System Variables
+### innodb_buffer_pool_size
+缓冲池（buffer pool）的字节大小，InnoDB缓存表和索引数据的内存区域。最大值取决于CPU架构，32位系统上的最大值为4294967295（2^32 - 1），64位系统上的最大值为18446744073709551615（2^64 - 1）。
+
+当缓冲池大小大于1GB时，将innodb_buffer_pool_instances设置为大于1的值可以提高繁忙服务器上的可伸缩性。
+
+更大的缓冲池需要更少的磁盘I/O来多次访问同一个表数据。在专用数据库服务器上，可以将缓冲池大小设置为计算机物理内存大小的80%。在配置缓冲池大小时，请注意以下潜在问题，并准备在必要时缩小缓冲池的大小。
+
+对物理内存的竞争可能导致操作系统中的分页。
+
+InnoDB为buffers和控制结构保留了额外的内存，因此分配的总空间大约比指定的缓冲池大小大10%。
+
+缓冲池的地址空间必须是连续的，这在具有在特定地址加载DLL的Windows系统上可能是一个问题。
+
+初始化缓冲池的时间大致与其大小成正比。在具有大型缓冲池的实例上，初始化时间可能很长。为了缩短初始化周期，可以在MySQL服务关闭时保存缓冲池状态，并在MySQL服务启动时恢复它。
+
+当您增加或减少缓冲池大小时，操作将以chunks的形式执行。chunk大小由innodb_buffer_pool_chunk_size变量定义。
+
+缓冲池大小必须始终等于或是innodb_buffer_pool_chunk_size * innodb_buffer_pool_instances的整数倍。如果将缓冲池大小更改为不等于innodb_buffer_pool_chunk_size * innodb_buffer_pool_instances或其整数倍，则缓冲池大小将自动调整为等于innodb_buffer_pool_chunk_size * innodb_buffer_pool_instances或其整数倍。
+
+innodb_buffer_pool_size可以动态设置，允许在不重新启动MySQL服务的情况下调整缓冲池大小。innodb_buffer_pool_resize_status变量报告联机缓冲池大小调整操作的状态。
+
+如果启用innodb_dedicated_server ，则如果未明确定义innodb_buffer_pool_size值，则会自动配置该值。
+
+### innodb_change_buffer_max_size
+InnoDB写缓冲（change buffer）的最大大小占缓冲池（buffer pool）总大小的百分比。对于具有大量insert、update和delete等写操作的服务可以增加该值，对于大部分为读操作的服务可以减少该值。
+
+### innodb_change_buffering
+InnoDB是否执行change buffering，这是一种将写入操作延迟到二级索引的优化，以便可以按顺序执行I/O操作。
+
+下表描述了允许值，数值也可以用数字表示。
+| Value   | Numeric Value | Description                             |
+| :------ | :-----------: | :-------------------------------------- |
+| none    |       0       | 不缓冲任何操作                           |
+| inserts |       1       | 缓冲插入操作                             |
+| deletes |       2       | 缓冲标记删除操作                         |
+| changes |       3       | 缓冲插入和标记删除操作                    |
+| purges  |       4       | 缓冲后台物理删除操作                      |
+| all     |       5       | 默认值，缓冲插入、标记删除和物理删除操作    |
+
 ### innodb_dedicated_server （从MySQL 8.0开始）
 当启用innodb_dedicated_server时，InnoDB会自动配置以下变量：
  - innodb_buffer_pool_size
@@ -41,6 +80,16 @@ InnoDB重做日志文件的目录路径，其编号由innodb_log_files_in_group�
 
 ### innodb_max_dirty_pages_pct
 InnoDB尝试将buffer pool中的脏页刷盘，以使脏页在buffer pool中的百分比不超过innodb_max_dirty_pages_pct，它本身并不会不影响刷盘速度。
+
+### innodb_old_blocks_pct
+用于指定old block sublist占InnoDB缓冲池的近似百分比，通常与innodb_old_blocks_time结合使用。
+
+### innodb_old_blocks_time
+指定插入到old sublist的块在第一次访问后必须在old sublist停留多少毫秒，然后才能移动到new sublist，通常与innodb_old_blocks_pct结合使用。
+
+如果该值为0，则插入到old sublist中的块在第一次被访问时会立即移动到new sublist，无论插入后多久进行访问。如果该值大于0，则块将保留在old sublist中，直到在第一次访问之后至少innodb_old_blocks_time毫秒再次发生访问为止。例如，值1000会导致块在第一次访问后在old sublist中停留1秒，然后才能在被再次访问时移动到new sublist。
+
+非零值可以防止缓冲池被只在短时间内引用的数据填充（例如在全表扫描期间），增加此值可以提供更多的保护，以防全表扫描干扰缓存在缓冲池中的数据。
 
 # 参考
 1.[15.14 InnoDB Startup Options and System Variables](https://dev.mysql.com/doc/refman/8.0/en/innodb-parameters.html)
