@@ -70,8 +70,25 @@ InnoDB是否执行change buffering，这是一种将写入操作延迟到二级�
 | all     |       5       | 默认值，缓冲插入、标记删除和物理删除操作    |
 
 ### innodb_data_file_path
+指定InnoDB系统表空间数据文件的名称、大小和属性。如果没有为innodb_data_file_path指定值，默认创建一个自动扩展的数据文件，略大于12MB，命名为ibdata1。
+
+数据文件规范的完整语法包括文件名、文件大小、autoextend属性和max属性：
+```
+file_name:file_size[:autoextend[:max:max_file_size]]
+```
+
+文件大小以千字节、兆字节或千兆字节（通过在大小值后面附加K、M或G）指定。如果以KB为单位指定数据文件大小，请以1024的整数倍指定，否则KB值将四舍五入到最近的MB边界。文件大小的总和至少要略大于12MB。
 
 ### innodb_data_home_dir
+指定InnoDB系统表空间数据文件路径的公共部分目录，默认值[MySQL的数据目录](#datadir)。该设置与[innodb_data_file_path](#innodb_data_file_path)串联，除非该设置用绝对路径定义。
+
+为innodb_data_home_dir指定值时需要一个尾部斜杠。例如：
+```
+[mysqld]
+innodb_data_home_dir = /path/to/myibdata/
+```
+
+此设置不影响每个表的文件表空间的位置。
 
 ### innodb_dedicated_server （从MySQL 8.0开始）
 当启用innodb_dedicated_server时，InnoDB会自动配置以下变量：
@@ -83,8 +100,31 @@ InnoDB是否执行change buffering，这是一种将写入操作延迟到二级�
 只有当MySQL实例位于可以使用所有可用系统资源的专用服务器上时，才考虑启用innodb_dedicated_server。如果MySQL实例与其他应用程序共享系统资源，则不建议启用innodb_dedicated_server。
 
 ### innodb_directories
+指定在启动时扫描表空间文件的目录。此选项用于在服务离线时将表空间文件移动或恢复到新位置。它还用于指定使用绝对路径创建或位于数据目录之外的表空间文件的目录。
+
+崩溃恢复期间的表空间发现依赖于innodb_directories来标识重做日志中引用的表空间。
+
+默认值NULL，但是当InnoDB创建一个启动时要扫描的目录列表时，innodb_data_home_dir、innodb_undo_directory和datadir定义的目录总是附加到innodb_directories之后。无论是否显式指定了innodb_directories，这些目录都会被追加。
+
+innodb_directories可以在启动命令或MySQL选项文件中指定。引号包围参数值是因为有些命令解释器将分号（;）解释为特殊字符。（例如，Unix shell将其视为命令终止符。）
+
+Startup command:
+```
+mysqld --innodb-directories="directory_path_1;directory_path_2"
+```
+
+MySQL option file:
+```
+[mysqld]
+innodb_directories="directory_path_1;directory_path_2"
+```
+
+通配符表达式不能用于指定目录。
+
+innodb_directories扫描也会遍历指定目录的子目录，并丢弃待扫描目录列表中的重复目录和子目录。
 
 ### innodb_doublewrite_dir
+指定doublewrite文件目录。如果不指定innodb_doublewrite_dir，则在[innodb_data_home_dir](#innodb_data_home_dir)目录下创建doublewrite文件;如果未指定innodb_data_home_dir，则默认为[数据目录](#datadir)。
 
 ### innodb_flush_neighbors
 指定是否在刷盘InnoDB buffer pool中的页同时刷盘同一extent内的其他脏页。
@@ -135,6 +175,17 @@ InnoDB尝试将buffer pool中的脏页刷盘，以使脏页在buffer pool中的�
 ### innodb_temp_tablespaces_dir
 
 ### innodb_tmpdir
+指定重建表的在线ALTER TABLE操作期间创建的临时排序文件的备用目录。
+
+重新生成表的在线ALTER TABLE操作还会在与原始表相同的目录中创建一个中间表文件。innodb_tmpdir选项不适用于中间表文件。
+
+有效值是除[MySQL数据目录](#datadir)外的任何目录，如果指定为NULL（默认值），则创建MySQL临时目录（Unix上为$TMPDIR, Windows上为%TEMP%，或者由--tmpdir选项指定的目录）。如果指定了目录，则只在使用SET语句配置innodb_tmpdir时检查目录是否存在和权限。如果在目录字符串中提供符号链接，则解析符号链接并将其存储为绝对路径，路径不能超过512字节。如果将innodb_tmpdir设置为无效目录，在线ALTER TABLE操作会报错。innodb_tmpdir覆盖MySQL的tmpdir设置，但仅用于在线ALTER TABLE操作。
+
+配置innodb_tmpdir需要FILE权限。
+
+引入innodb_tmpdir选项是为了避免tmpfs文件系统上的临时文件目录溢出。这种溢出可能是在重新构建表的联机ALTER TABLE操作期间创建的大型临时排序文件造成的。
+
+在replication环境中，仅当所有服务都具有相同的操作系统环境时，才考虑复制innodb_tmpdir。否则，复制innodb_tmpdir可能导致在运行重建表的在线ALTER TABLE操作时复制失败。如果服务器运行环境不同，建议在每台服务器上分别配置innodb_tmpdir。
 
 ### innodb_undo_directory
 
