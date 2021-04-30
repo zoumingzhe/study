@@ -1,6 +1,12 @@
 # MySQL参数
 
 ## Server System Variables
+### basedir
+指定MySQL的安装目录。
+
+### datadir
+指定MySQL的数据目录。相对路径相对于当前目录进行解析，如果希望服务自动启动（即无法预知当前目录的上下文）最好将datadir指定为绝对路径。
+
 ### tmpdir
 指定用于创建临时文件的目录。如果默认的/tmp目录所在的分区太小，无法容纳临时表，那么它可能很有用。可以将此变量设置为以循环方式使用的多个路径的列表，在Unix上路径应以冒号字符（:）分隔，在Windows上路径应以分号字符（;）分隔。
 
@@ -22,6 +28,8 @@ tmpdir可以是非永久性位置，例如基于内存的文件系统上的目�
 指定使用binlog语句缓存的非事务语句数。
 
 ## InnoDB Startup Options and System Variables
+### innodb_buffer_pool_filename
+
 ### innodb_buffer_pool_size
 缓冲池（buffer pool）的字节大小，InnoDB缓存表和索引数据的内存区域。最大值取决于CPU架构，32位系统上的最大值为4294967295（2^32 - 1），64位系统上的最大值为18446744073709551615（2^64 - 1）。
 
@@ -61,6 +69,10 @@ InnoDB是否执行change buffering，这是一种将写入操作延迟到二级�
 | purges  |       4       | 缓冲后台物理删除操作                      |
 | all     |       5       | 默认值，缓冲插入、标记删除和物理删除操作    |
 
+### innodb_data_file_path
+
+### innodb_data_home_dir
+
 ### innodb_dedicated_server （从MySQL 8.0开始）
 当启用innodb_dedicated_server时，InnoDB会自动配置以下变量：
  - innodb_buffer_pool_size
@@ -69,6 +81,10 @@ InnoDB是否执行change buffering，这是一种将写入操作延迟到二级�
  - innodb_flush_method
 
 只有当MySQL实例位于可以使用所有可用系统资源的专用服务器上时，才考虑启用innodb_dedicated_server。如果MySQL实例与其他应用程序共享系统资源，则不建议启用innodb_dedicated_server。
+
+### innodb_directories
+
+### innodb_doublewrite_dir
 
 ### innodb_flush_neighbors
 指定是否在刷盘InnoDB buffer pool中的页同时刷盘同一extent内的其他脏页。
@@ -111,6 +127,16 @@ InnoDB尝试将buffer pool中的脏页刷盘，以使脏页在buffer pool中的�
 如果该值为0，则插入到old sublist中的块在第一次被访问时会立即移动到new sublist，无论插入后多久进行访问。如果该值大于0，则块将保留在old sublist中，直到在第一次访问之后至少innodb_old_blocks_time毫秒再次发生访问为止。例如，值1000会导致块在第一次访问后在old sublist中停留1秒，然后才能在被再次访问时移动到new sublist。
 
 非零值可以防止缓冲池被只在短时间内引用的数据填充（例如在全表扫描期间），增加此值可以提供更多的保护，以防全表扫描干扰缓存在缓冲池中的数据。
+
+### innodb_redo_log_archive_dirs
+
+### innodb_temp_data_file_path
+
+### innodb_temp_tablespaces_dir
+
+### innodb_tmpdir
+
+### innodb_undo_directory
 
 ## Replica Server Options and Variables
 
