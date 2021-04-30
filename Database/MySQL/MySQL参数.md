@@ -1,5 +1,26 @@
 # MySQL参数
 
+## Server System Variables
+### tmpdir
+指定用于创建临时文件的目录。如果默认的/tmp目录所在的分区太小，无法容纳临时表，那么它可能很有用。可以将此变量设置为以循环方式使用的多个路径的列表，在Unix上路径应以冒号字符（:）分隔，在Windows上路径应以分号字符（;）分隔。
+
+tmpdir可以是非永久性位置，例如基于内存的文件系统上的目录或主机重启时清除的目录。如果MySQL服务作为一个replica，而tmpdir使用的是非永久位置，请考虑使用slave_load_tmpdir变量为replica设置一个不同的临时目录。对于replica，用于复制LOAD DATA语句的临时文件存储在tmpdir目录中，因此tmpdir使用永久位置，临时文件可以在计算机重新启动后继续存在，如果临时文件被删除，则在重新启动后继续复制。
+
+## Server Status Variables
+### Binlog_cache_disk_use
+指定使用binlog缓存但超过[binlog_cache_size](#binlog_cache_size)值并使用临时文件存储事务中语句的事务数。
+
+写入磁盘的非事务语句数由[Binlog_stmt_cache_disk_use](#Binlog_stmt_cache_disk_use)单独跟踪。
+
+### Binlog_cache_use
+指定使用binlog缓存的事务数。
+
+### Binlog_stmt_cache_disk_use
+指定指定使用binlog语句缓存但超过[binlog_stmt_cache_size](#binlog_stmt_cache_size)值并使用临时文件存储的非事务语句数。
+
+### Binlog_stmt_cache_use
+指定使用binlog语句缓存的非事务语句数。
+
 ## InnoDB Startup Options and System Variables
 ### innodb_buffer_pool_size
 缓冲池（buffer pool）的字节大小，InnoDB缓存表和索引数据的内存区域。最大值取决于CPU架构，32位系统上的最大值为4294967295（2^32 - 1），64位系统上的最大值为18446744073709551615（2^64 - 1）。
@@ -91,7 +112,38 @@ InnoDB尝试将buffer pool中的脏页刷盘，以使脏页在buffer pool中的�
 
 非零值可以防止缓冲池被只在短时间内引用的数据填充（例如在全表扫描期间），增加此值可以提供更多的保护，以防全表扫描干扰缓存在缓冲池中的数据。
 
+## Replica Server Options and Variables
+
 ## Binary Logging Options and Variables
+### binlog_cache_size
+指定一个事务binlog的内存缓冲区大小，该值必须是4096的整数倍。
+
+当启用binlog记录时（[log_bin](#log_bin)设置为ON），如果服务支持任何事务性存储引擎，则会为每个客户端分配一个binlog缓存。如果事务的数据大小超过内存缓冲区的空间，则多余的数据将存储在临时文件中。当binlog加密处于活动状态时，内存缓冲区不会加密，但是（从MySQL 8.0.17开始）用于保存binlog缓存的任何临时文件都会加密。在每个事务被提交之后，通过清理内存缓冲区和清空临时文件（如果使用）来重置binlog缓存。
+
+如果经常使用大型事务，则可以通过增加缓存大小来减少或消除对临时文件的写操作以获得更好的性能，[Binlog_cache_use](#Binlog_cache_use)和[Binlog_cache_disk_use](#Binlog_cache_disk_use)状态变量可用于调整此变量的大小。
+
+binlog_cache_size只设置事务缓存的大小；语句缓存的大小由binlog_stmt_cache_size指定。
+
+### binlog_checksum
+指定是否启用为每个源为binlog的事件写入校验和。binlog_checksum支持的值为NONE（禁用校验和）和CRC32，默认值为CRC32。当binlog_checksum被禁用（值为NONE）时，通过写入和检查每个事件的事件长度（而不是校验和）来验证它是否只将完整的事件写入binlog。
+
+将source的此变量设置为replica无法识别的值将导致replica将其自己的binlog_checksum值设置为NONE，并出现错误停止复制。如果需要考虑与旧副本的向后兼容性，则可能需要将该值显式设置为NONE。
+
+在MySQL8.0.20之前（包括MySQL8.0.20），Group Replication不能使用校验和，并且不支持它们在binlog中的存在，因此在将服务实例配置为group member时，必须将binlog_checksum设置为NONE。在MySQL 8.0.21开始，Group Replication支持校验和，因此group member可以使用默认设置。
+
+更改binlog_checksum的值会导致binlog旋转，因为必须为整个binlog文件写入校验和，而不能仅为其中一个文件的一部分写入校验和。不能在事务中更改binlog_checksum的值。
+
+当使用[binlog_transaction_compression](#binlog_transaction_compression)启用binlog事务压缩时，不会为压缩事务负载中的单个事件写入校验和，而是为GTID事件写一个校验和，并且为压缩事务负载事件写一个校验和。
+
+### binlog_encryption
+指定是否启用binlog文件和中继日志文件的加密，默认为OFF。ON为binlog文件和中继日志文件设置加密。不需要在服务器上启用binlog来启用加密，因此可以在没有binlog的replica上加密中继日志文件。要使用加密，必须安装并配置一个keyring插件以提供MySQL服务器的keyring服务，任何支持的keyring插件都可以用来存储binlog加密密钥。
+
+在首次启动启用binlog加密的服务时，将在初始化binlog和中继日志之前生成新的binlog加密密钥。此密钥用于加密每个binlog文件（如果启用了binlog记录）和中继日志文件（如果存在replication channels）的文件密码，并且使用从文件密码生成的其他密钥加密文件中的数据。所有通道的中继日志文件都将被加密，包括Group Replication的applier channels和激活加密后创建的new channels。binlog索引文件和中继日志索引文件从不加密。
+
+如果在服务运行时激活加密，则此时会生成一个新的binlog加密密钥。例外情况是，如果加密以前在服务上被激活过然后被禁用，在这种情况下以前使用的binlog加密密钥将被再次使用。binlog文件和中继日志文件将立即轮换，新文件和所有后续binlog文件和中继日志文件的文件密码将使用此binlog加密密钥进行加密。服务上仍然存在的现有binlog文件和中继日志文件不会自动加密，但如果不再需要它们，可以清除它们。
+
+如果将binlog_encryption更改为OFF来停用加密，binlog文件和中继日志文件将立即旋转，并且所有后续日志记录都将取消加密。以前加密的文件不会自动解密，但服务器仍然能够读取它们。在服务运行时激活或停用加密需要BINLOG_ENCRYPTION_ADMIN特权（或不推荐使用的SUPER特权）。Group Replication的applier channels不包括在中继日志轮换请求中，因此这些通道正常使用中的未加密日志记录在轮换日志之前不会启动。
+
 ### binlog_expire_logs_seconds
 指定以秒为单位的binlog过期时间并自动删除过期的binlog文件。binlog文件删除可能发生在startup和binlog刷盘时。默认的binlog过期时间是2592000秒，等于30天（30*24*60*60秒）。
 
@@ -119,7 +171,9 @@ InnoDB尝试将buffer pool中的脏页刷盘，以使脏页在buffer pool中的�
 
 
 # 参考
-1.[15.14 InnoDB Startup Options and System Variables](https://dev.mysql.com/doc/refman/8.0/en/innodb-parameters.html)
-
-2.[17.1.6.4 Binary Logging Options and Variables](https://dev.mysql.com/doc/refman/8.0/en/replication-options-binary-log.html)
+ * [5.1.8 Server System Variables](https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html)
+ * [5.1.10 Server Status Variables](https://dev.mysql.com/doc/refman/8.0/en/server-status-variables.html)
+ * [15.14 InnoDB Startup Options and System Variables](https://dev.mysql.com/doc/refman/8.0/en/innodb-parameters.html)
+ * [17.1.6.3 Replica Server Options and Variables](https://dev.mysql.com/doc/refman/8.0/en/replication-options-replica.html)
+ * [17.1.6.4 Binary Logging Options and Variables](https://dev.mysql.com/doc/refman/8.0/en/replication-options-binary-log.html)
 
