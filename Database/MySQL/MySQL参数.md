@@ -238,7 +238,7 @@ autoextend选项使数据文件在可用空间耗尽时自动增大大小。默�
 ### innodb_undo_directory
 指定InnoDB创建undo表空间的路径。通常用于将undo表空间放置在不同的存储设备上。
 
-没有默认值（NULL）。如果innodb_undo_directory定义，则在数据目录中创建undo表空间。
+没有默认值（NULL）。如果innodb_undo_directory未定义，则在数据目录中创建undo表空间。
 
 MySQL实例初始化时创建的默认undo表空间（innodb_undo_001和innodb_undo_002）始终位于innodb_undo_directory指定的目录中。
 
