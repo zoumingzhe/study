@@ -29,6 +29,14 @@ tmpdir可以是非永久性位置，例如基于内存的文件系统上的目�
 
 ## InnoDB Startup Options and System Variables
 ### innodb_buffer_pool_filename
+指定包含innodb_buffer_pool_dump_at_shutdown或innodb_buffer_pool_dump_now生成的表空间id和页id列表的文件名。表空间id和页面id的保存格式为：space, page_id。默认情况下，文件名为ib_buffer_pool，位于InnoDB数据目录中。必须相对于数据目录指定非默认位置。
+
+文件名可以在运行时使用SET语句指定：
+```
+SET GLOBAL innodb_buffer_pool_filename='file_name';
+```
+
+也可以在启动时在启动字符串或MySQL配置文件中指定文件名。当在启动时指定文件名时，该文件必须存在，否则InnoDB将返回一个启动错误，指示没有这样的文件或目录。
 
 ### innodb_buffer_pool_size
 缓冲池（buffer pool）的字节大小，InnoDB缓存表和索引数据的内存区域。最大值取决于CPU架构，32位系统上的最大值为4294967295（2^32 - 1），64位系统上的最大值为18446744073709551615（2^64 - 1）。
@@ -169,10 +177,50 @@ InnoDB尝试将buffer pool中的脏页刷盘，以使脏页在buffer pool中的�
 非零值可以防止缓冲池被只在短时间内引用的数据填充（例如在全表扫描期间），增加此值可以提供更多的保护，以防全表扫描干扰缓存在缓冲池中的数据。
 
 ### innodb_redo_log_archive_dirs
+指定可以创建重做日志存档文件的标签目录。可以在分号分隔的列表中定义多个带标签的目录。例如：
+```
+innodb_redo_log_archive_dirs='label1:/backups1;label2:/backups2'
+```
+
+标签可以是除冒号（:）外的任何字符串。也允许使用空标签，但在这种情况下仍然需要冒号（:）。
+
+必须指定路径，并且目录必须存在。路径可以包含冒号（':'），但不允许包含分号（;）。
 
 ### innodb_temp_data_file_path
+指定全局临时表空间数据文件的相对路径、名称、大小和属性。全局临时表空间存储用户创建临时表所做更改的回滚段。
+
+如果没有为innodb_temp_data_file_path指定值，默认的行为是在[innodb_data_home_dir](#innodb_data_home_dir)目录创建一个名为ibtmp1的自动扩展数据文件。初始文件大小略大于12MB。
+
+全局临时表空间数据文件规范的语法包括文件名、文件大小、autoextend和max属性：
+```
+file_name:file_size[:autoextend[:max:max_file_size]]
+```
+
+全局临时表空间数据文件不能与其他InnoDB数据文件同名。任何创建全局临时表空间数据文件的失败或错误都将被视为致命错误，并拒绝服务启动。
+
+通过在size值后面附加K、M或G，以KB、MB或GB为单位指定文件大小。文件大小之和必须略大于12MB。
+
+单个文件的大小限制由操作系统决定。在支持大文件的操作系统上，文件大小可以超过4GB。不支持对全局临时表空间数据文件使用裸磁盘分区。
+
+autoextend和max属性只能用于innodb_temp_data_file_path中最后指定的数据文件。例如:
+```
+[mysqld]
+innodb_temp_data_file_path=ibtmp1:50M;ibtmp2:12M:autoextend:max:500MB
+```
+
+autoextend选项使数据文件在可用空间耗尽时自动增大大小。默认情况下，自动扩展增量为64MB。要修改增量，请更改innodb_autoextend_increment。
+
+全局临时表空间数据文件的目录路径是由[innodb_data_home_dir](#innodb_data_home_dir)和[innodb_temp_data_file_path](#innodb_temp_data_file_path)定义的路径串联而成。
+
+在以只读模式运行InnoDB前，请将innodb_temp_data_file_path设置为数据目录之外的位置，该路径必须相对于数据目录。例如：
+```
+--innodb-temp-data-file-path=../../../tmp/ibtmp1:12M:autoextend
+```
 
 ### innodb_temp_tablespaces_dir
+指定InnoDB在启动时创建会话临时表空间池的位置。默认位置是数据目录中的#innodb_temp目录。允许使用完全限定路径或相对于数据目录的路径。
+
+从MySQL 8.0.16开始，会话临时表空间总是存储用户创建的临时表和优化器使用InnoDB创建的内部临时表。（以前，内部临时表的磁盘上存储引擎是由internal_tmp_disk_storage_engine确定的，现在不再支持这个变量。）
 
 ### innodb_tmpdir
 指定重建表的在线ALTER TABLE操作期间创建的临时排序文件的备用目录。
@@ -188,6 +236,13 @@ InnoDB尝试将buffer pool中的脏页刷盘，以使脏页在buffer pool中的�
 在replication环境中，仅当所有服务都具有相同的操作系统环境时，才考虑复制innodb_tmpdir。否则，复制innodb_tmpdir可能导致在运行重建表的在线ALTER TABLE操作时复制失败。如果服务器运行环境不同，建议在每台服务器上分别配置innodb_tmpdir。
 
 ### innodb_undo_directory
+指定InnoDB创建undo表空间的路径。通常用于将undo表空间放置在不同的存储设备上。
+
+没有默认值（NULL）。如果innodb_undo_directory定义，则在数据目录中创建undo表空间。
+
+MySQL实例初始化时创建的默认undo表空间（innodb_undo_001和innodb_undo_002）始终位于innodb_undo_directory指定的目录中。
+
+如果未指定其他路径，则使用CREATE UNDO TABLESPACE语法创建的undo表空间将在innodb_undo_directory指定的目录中创建。
 
 ## Replica Server Options and Variables
 
