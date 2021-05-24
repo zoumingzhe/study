@@ -1,5 +1,8 @@
 Ceph Placement Group States （归置组状态）
 =========================================
+当检查集群的状态（例如：运行`ceph-w`或`ceph-s`）时，ceph将报告归置组的状态。
+
+归置组有一个或多个状态，归置组的最佳状态为`active + clean`。
 
 ## creating
 ```
@@ -182,7 +185,7 @@ Trimming snaps.
 ## snaptrim_wait
 ```
 Queued to trim snaps.
-删除快照。
+删除快照等待。
 ```
 
 ## snaptrim_error
