@@ -4,6 +4,7 @@ Ceph Placement Group States （归置组状态）
 
 归置组有一个或多个状态，归置组的最佳状态为`active + clean`。
 
+# 归置组状态
 ## creating
 ```
 Ceph is still creating the placement group.
