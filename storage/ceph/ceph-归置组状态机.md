@@ -6,7 +6,7 @@ Ceph在处理PG的状态转换时，使用了boost库提供的[statechart](../..
 
 ## 利用`gen_state_diagram.py`与`Graphviz`生成状态转换图
 ```shell
-cat src/osd/PeeringState.h src/osd/PeeringState.cc | doc/scripts/gen_state_diagram.py > ~/Pictures/PeeringState.dot
+cat ./src/osd/PeeringState.h ./src/osd/PeeringState.cc | ./doc/scripts/gen_state_diagram.py > ~/Pictures/PeeringState.dot
 dot -Tpng ~/Pictures/PeeringState.dot -o ~/Pictures/PeeringState.png
 ```
 
