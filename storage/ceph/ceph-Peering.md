@@ -111,31 +111,32 @@ struct pg_history_t {
  - 在`primary`成功完成`peering`过程之前，`OSD Map`必须反映`OSD`是存活的，并且是`current interval`中的第一个`epoch`。
  - 只有在`peering`成功后才能进行更改。
 
-因此，新的primary可以使用最新的`OSD Map`以及`OSD Map`的近期历史来生成一组past interval集合，以确定在peering成功之前必须询问哪些OSD。past interval集合以最`pg_info_t:last_epoch_started`为界，即知道peering完成的最近past interval。OSD发现PG存在是通过交换PG info消息，因此OSD总是有`pg_history_t:last_epoch_started`下限值。
+因此，新的`primary`可以使用最新的`OSD Map`以及`OSD Map`的近期历史来生成一组`past interval`集合，以确定在`peering`成功之前必须询问哪些`OSD`。`past interval`集合以`pg_info_t:last_epoch_started`为界，即知道`peering`完成的最近`past interval`。`OSD`发现`PG`存在是通过交换`PG Info`消息，因此`OSD`总是有`pg_history_t:last_epoch_started`下限值。
 
-当前PG的primary处理流程：
- 1. 获取最近的`OSD Map`（以识别所有Acting Set的成员，并确认自身仍然是primary）。
- 2. 生成自`pg_info_t:last_epoch_started`以来的past intervals列表。考虑那些up_thru大于第一个间隔epoch的最后一个间隔的`OSD Map`的子集；也就是说，在Acting Set变化为另一组OSD之前，peering可能已完成的子集。
- peering成功要求能够从每个past interval的Acting Set中联系至少一个OSD。
- 3. 向该列表中的每个节点询问其PG info，其中包括对PG进行的最近写入，以及`pg_info_t:last_epoch_started`值。如果发现比自身拥有的`pg_info_t:last_epoch_started`更新，可以裁剪更旧的past interval并减少peering需要联系的OSD。
- 4. 如果在其他OSD的PGLog中有primary没有的操作，就指示该OSD向primary发送缺失的PGLog条目，以使primary的PGLog保持最新的（包括最新的写入）。
- 5. 对于当前Acting Set的每个OSD：
-    - 要求其提供自`pg_info_t:last_epoch_started`以来所有的PGLog条目副本，以便primary可以验证其是否与primary的一致（或知道将告知其删除的对象）。
-    如果集群在操作被Acting Set所有成员持久化之前失败，并且随后的peering未记录该操作，并且记录了该操作的节点是之后重新加入，则其PGLog与这次失败后peering所重建的权威日志之间的差异将记录于分歧日志（divergent history）。
-    由于分歧事件（divergent event）没有记录在来自该Acting Set的其他OSD的PGLog中，它们不会被通知客户端已确认，丢弃它们是无害的（这样所有OSD都同意权威日志）。但是，必须指示所有存储了来自分歧更新（divergent update）数据的OSD删除受影响的（现在被认为是伪造的）对象。
-    - 询问missing set（对象更新记录在了PGLog中，但还未更新数据），这是在接受新的写入之前必须完全复制的对象列表。
- 6. 此时，primary的PGLog包含了PG的权威日志（authoritative history），并且有足够的信息来更新Acting Set中的任何其他OSD。
- 7. 如果当前`OSD Map`中primary的up_thru值小于等于current interval中的第一个epoch，则向monitor发送更新请求并等待，直到收到up_thru被更新后的`OSD Map`。
- 8. 对于当前Acting Set的每个OSD：
-    - 向其发送PGLog更新，使其PGLog与primary的PGLog（权威日志）一致，这可能涉及删除歧义对象（divergent object）。
-    - 等待其确认PGLog条目已持久化。
- 9. 此时，Acting Set中的所有OSD都统一了所有元数据，并且（在任何未来peering中）将返回包含所有更新的相同PGLog条目。
-    - 开始接受客户端写操作（因为所有OSD都一致同意接受这些对象更新）。但是请注意，如果客户端的写操作将被提升到恢复队列的最后，在当前Acting Set完全同步之后将执行写入。
-    - 更新primary本地PG info中的`pg_info_t:last_epoch_started`，并指示Acting Set中的其他OSD执行相同操作。
-    - 拉取primary没有但其他OSD具有的对象数据更新。为了找到所有对象的副本，可能需要查询从`pg_history_t:last_epoch_clean`（恢复完成的最后epoch）之后到`pg_info_t:last_epoch_started`（最后一次peering完成）之前的其他past interval中的OSD。
-    - 将对象数据更新推送至其他缺失的OSD。从primary推送这些更新（而不是让副本拉取），因为这允许primary确保在发送更新写入之前副本具有当前内容。还可以（从primary）通过一次读即可将数据写入多个副本，如果每个副本都自行拉取则可能需要多次读取数据。
- 10. 一旦所有副本都存储了所有（在此epoch开始之前就存在）的对象，就可以更新PG info中的last epoch clean，并且可以清除所有stray副本，允许其删除已不在Acting Set中的对象副本。
- 在此之前不可以清除这些stray，因为其中一个stray可能拥有旧对象（其所有副本在被同步到当前Acting Set中的OSD之前就全部down）的唯一幸存副本。
+当前`PG`的`primary`处理流程：
+ 1. 获取最近的`OSD Map`（以识别所有`Acting Set`的成员，并确认自身仍然是`primary`）。
+ 2. 生成自`pg_info_t:last_epoch_started`以来的`past intervals`列表。考虑那些间隔的最后一个`epoch`的`OSD Map`中`up_thru`大于间隔的第一个`epoch`的子集；也就是说，在`Acting Set`变化为另一组`OSD`之前，`peering`可能已完成的子集。
+ `peering`成功要求能够从每个`past interval`的`Acting Set`中联系至少一个`OSD`。
+ 3. 向该列表中的每个节点询问其`PG Info`，其中包括对`PG`进行的最近写入，以及`pg_info_t:last_epoch_started`值。如果得知`pg_info_t:last_epoch_started`比自身拥有的更新，可以裁剪更旧的`past interval`并减少`peering`需要联系的`OSD`。
+ 4. 如果在其他`OSD`的`PG Log`中有`primary`没有的操作，就指示该`OSD`向`primary`发送缺失的`PG Log`条目，以使`primary`的`PG Log`保持最新（包括最新的写入）。
+ 5. 对于当前`Acting Set`的每个`OSD`：
+    - 要求其提供自`pg_info_t:last_epoch_started`以来所有的`PG Log`条目副本，以便`primary`可以验证其是否与`primary`的一致（或知道将告知其删除的对象）。
+    如果集群在操作被`Acting Set`所有成员持久化之前故障，随后的`peering`未记录该操作，并且记录了该操作的节点是之后重新加入，则其`PG Log`与这次故障后`peering`所重建的权威日志之间的差异将记录于分歧日志（divergent history）。
+    由于分歧事件（divergent event）没有记录在来自该`Acting Set`的其他`OSD`的`PG Log`中，它们不会被通知客户端已确认，丢弃它们是无害的（这样所有`OSD`的权威日志都一致）。但是，必须指示所有存储了来自分歧更新（divergent update）数据的`OSD`删除受影响的（现在被认为是伪造的）对象。
+    - 询问`missing set`（对象更新记录在了`PG Log`中，但还未更新数据），这是在接受新的写入之前必须完全同步的对象列表。
+ 6. 此时，`primary`的`PG Log`包含了`PG`的权威日志（authoritative history），并且有足够的信息来更新`Acting Set`中的任何其他`OSD`。
+ 7. 如果当前`OSD Map`中`primary`的`up_thru`值小于等于`current interval`中的第一个`epoch`，则向`monitor`发送更新请求并等待，直到收到`up_thru`被更新后的`OSD Map`。
+ 8. 对于当前`Acting Set`的每个`OSD`：
+    - 向其发送`PG Log`更新，使其`PG Log`与`primary`的`PG Log`（权威日志）一致，这可能涉及删除歧义对象（divergent object）。
+    - 等待其确认`PG Log`条目已持久化。
+ 9. 此时，`Acting Set`中的所有`OSD`统一了所有元数据，并且（在任何未来`peering`中）将返回包含所有更新的相同`PG Log`条目。
+    - 开始接受客户端写操作（因为所有`OSD`都一致接受这些对象更新）。但是请注意，如果客户端的写操作将被提升到恢复队列的最后，等当前`Acting Set`完全同步之后才将执行写入。
+    - 更新`primary`本地`PG Info`中的`pg_info_t:last_epoch_started`，并指示`Acting Set`中的其他`OSD`执行相同操作。
+    - 拉取`primary`没有但其他`OSD`具有的对象数据更新。为了找到所有对象的副本，可能需要查询从`pg_history_t:last_epoch_clean`（恢复完成的最后`epoch`）之后到`pg_info_t:last_epoch_started`（最后一次`peering`完成）之前的其他`past interval`中的`OSD`。
+    - 将对象数据更新推送至其他缺失的`OSD`。
+    从`primary`推送这些更新（而不是让副本拉取），因为这允许`primary`确保在发送更新写之前副本具有当前内容。还可以（从`primary`）通过一次读即可将数据写入多个副本，如果每个副本都自行拉取则可能需要多次读取数据。
+ 10. 一旦所有副本都存储了所有（在此`epoch`开始之前就存在）的对象，就可以更新`PG Info`中的`last epoch clean`，并且可以清除所有`stray`副本，允许其删除已不在`Acting Set`中的对象副本。
+ 在此之前不可以清除这些`stray`，因为其中一个`stray`可能拥有旧对象（其所有副本在被同步到当前`Acting Set`中的`OSD`之前就全部down）的唯一幸存副本。
 
 The Golden Rule is that no write operation to any PG is acknowledged to a client until it has been persisted by all members of the acting set for that PG. This means that if we can communicate with at least one member of each acting set since the last successful peering, someone will have a record of every (acknowledged) operation since the last successful peering. This means that it should be possible for the current primary to construct and disseminate a new authoritative history.
 
