@@ -89,7 +89,7 @@ PGBackend interfaces:
 在数据修复的过程中，为了控制一个OSD上正在修复的PG最大数目，需要资源预约，在主OSD上和从OSD上都需要预约。如果没有预约成功，需要阻塞等待。一个OSD能同时修复的最大PG数在配置选项osd_max_backfills中设置，默认值为1。
 
 类AsyncReserver(src/common/AsyncReserver.h)用来管理资源预约，其模板参数<T>为要预约的资源类型。该类实现了异步的资源预约。当成功完成资源预约后，就调用注册的回调函数通知调用方预约成功：
-```
+```C++
 template <typename T>
 class AsyncReserver {
   CephContext *cct;
@@ -115,7 +115,7 @@ class AsyncReserver {
 
 ## 请求预约
 ./src/common/AsyncReserver.h:request_reservation()函数用于请求预约资源：
-```
+```C++
 /**
 * Requests a reservation
 *
@@ -143,7 +143,7 @@ void request_reservation(
 
 具体处理过程如下：
  1. 把要请求的资源根据优先级添加到queue队列中，并在queue_pointers中添加其对应的位置指针：
-```
+```C++
 queues[prio].push_back(r);
 queue_pointers.insert(make_pair(item, make_pair(prio,--(queues[prio]).end())));
 ```
@@ -153,7 +153,7 @@ queue_pointers.insert(make_pair(item, make_pair(prio,--(queues[prio]).end())));
 
 ## 取消预约
 ./src/common/AsyncReserver.h:cancle_reservation()函数用于释放拥有的不再使用的资源：
-```
+```C++
 /**
 * Cancels reservation
 *
@@ -214,3 +214,4 @@ void cancel_reservation(
  * [ceph数据修复](https://ivanzz1001.github.io/records/post/ceph/2019/02/02/ceph-src-code-part11_1)
  * [Ceph中的数据一致性](https://blog.shunzi.tech/post/ceph-consistency/)
  * [PGLog写流程梳理](https://blog.csdn.net/Z_Stand/article/details/100082984)
+ * [Ceph源码解析：Scrub故障检测](https://www.cnblogs.com/chenxianpao/p/5878159.html)
