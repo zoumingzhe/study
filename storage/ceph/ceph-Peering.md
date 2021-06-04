@@ -2,12 +2,19 @@ Ceph Peering
 ============
 
 # 概念
+## 
+
+ - [Peering](./ceph-concept/ceph-concept-peering.md)
  - [Acting Set](./ceph-concept/ceph-concept-acting_set.md)
  - [Up Set](./ceph-concept/ceph-concept-up_set.md)
+ - [PG temp](./ceph-concept/ceph-concept-pg_temp.md)
+ - [primary](./ceph-concept/ceph-concept-primary.md)
+ - [stray](./ceph-concept/ceph-concept-stray.md)
  - [current interval](./ceph-concept/ceph-concept-current_interval.md)
  - [past interval](./ceph-concept/ceph-concept-past_interval.md)
- - [stray](./ceph-concept/ceph-concept-stray.md)
+ - [missing set](./ceph-concept/ceph-concept-missing_set.md)
  - [Authoritative History](./ceph-concept/ceph-concept-authoritative_history.md)
+ - [epoch](./ceph-concept/ceph-concept-epoch.md)
  - [last epoch start](./ceph-concept/ceph-concept-last_epoch_start.md)
  - [last epoch clean](./ceph-concept/ceph-concept-last_epoch_clean.md)
  - [up_thru](./ceph-concept/ceph-concept-up_thru.md)
@@ -113,7 +120,7 @@ struct pg_history_t {
 
 因此，新的`primary`可以使用最新的`OSD Map`以及`OSD Map`的近期历史来生成一组`past interval`集合，以确定在`peering`成功之前必须询问哪些`OSD`。`past interval`集合以`pg_info_t:last_epoch_started`为界，即知道`peering`完成的最近`past interval`。`OSD`发现`PG`存在是通过交换`PG Info`消息，因此`OSD`总是有`pg_history_t:last_epoch_started`下限值。
 
-当前`PG`的`primary`处理流程：
+`PG`当前`primary`的处理流程：
  1. 获取最近的`OSD Map`（以识别所有`Acting Set`的成员，并确认自身仍然是`primary`）。
  2. 生成自`pg_info_t:last_epoch_started`以来的`past intervals`列表。考虑那些间隔的最后一个`epoch`的`OSD Map`中`up_thru`大于间隔的第一个`epoch`的子集；也就是说，在`Acting Set`变化为另一组`OSD`之前，`peering`可能已完成的子集。
  `peering`成功要求能够从每个`past interval`的`Acting Set`中联系至少一个`OSD`。
