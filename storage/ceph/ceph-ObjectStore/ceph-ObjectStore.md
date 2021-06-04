@@ -9,6 +9,10 @@ Ceph ObjectStore
  - MemStore：基于内存保存数据和元数据，用以测试和验证。
 
 
+ObjectStore所存储的每一个object都是由处于collection(coll_t)中ghobject_t或hobject_t所标识（注： 这里我们可以将collection理解为一个PG，一个object对应一个PG，但是一个PG可以对应多个object，一个coll_t中的objects可以认为都属于同一个PG）。ObjectStore支持在一个collection内创建(creation)、修改(mutation)、删除(deletion)、枚举(enumeration)对象的操作。这里枚举对象时，是按hash后的对象名的字典序进行输出的。object名称在全局是唯一的。
+
+每一个object都有4个不同的部分：data、xattrs、omap_header以及omap_entries。
+
 object包含3个元素data，xattr，omap。data是保存对象的数据，xattr是保存对象的扩展属性，每个对象文件都可以设置文件的属性，这个属性是一个key/value值对，但是受到文件系统的限制，key/value对的个数和每个value的大小都进行了限制。如果要设置的对象的key/value不能存储在文件的扩展属性中，还存在另外一种方式保存omap，omap实际上是保存到了key/vaule  值对的数据库levelDB中，在这里value的值限制要比xattr中好的多。
 
 
