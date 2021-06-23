@@ -78,6 +78,5 @@ The default priority set for recovery work queue. Not related to a pool’s reco
 
 为恢复工作队列设置的默认优先级。与池的`recovery_priority`无关。
 
-
 # 参考
  * [OSD CONFIG REFERENCE](https://docs.ceph.com/en/latest/rados/configuration/osd-config-ref/)
