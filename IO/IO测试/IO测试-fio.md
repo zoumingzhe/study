@@ -23,8 +23,9 @@ yum -y install fio
 ```
 
 # fio命令解析
+## fio ioengine
+`fio --enghelp`
 
 # 参考
-1.[fio](http://freshmeat.sourceforge.net/projects/fio)
-
-2.[fio I/O测试工具](https://www.oschina.net/p/fio)
+ * [fio](http://freshmeat.sourceforge.net/projects/fio)
+ * [fio I/O测试工具](https://www.oschina.net/p/fio)
