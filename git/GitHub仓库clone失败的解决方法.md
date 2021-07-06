@@ -1,4 +1,5 @@
-# GitHub仓库clone失败的解决方法
+GitHub仓库clone失败的解决方法
+============================
 中国大陆的GitHub服务很不稳定，导致GitHub仓库clone时经常fatal或者hang，下面介绍几种解决方法。
 
 # 解决方案1：ZIP下载
@@ -70,6 +71,5 @@
 此种方式适合有VPN的情况。
 
 # 参考
-1.[GitHub仓库快速导入Gitee及同步更新](https://gitee.com/help/articles/4284)
-
-2.[断点续传式git clone（伪）](https://blog.csdn.net/zerooffdate/article/details/79348925)
+ * [GitHub仓库快速导入Gitee及同步更新](https://gitee.com/help/articles/4284)
+ * [断点续传式git clone（伪）](https://blog.csdn.net/zerooffdate/article/details/79348925)
