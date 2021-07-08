@@ -11,10 +11,12 @@ Bcache从3.10开始正式并入内核主线，通过`uname -r`命令查看内核
 通过查看是否存在`/sys/fs/bcache`目录确定bcache是否存在于内核中。
 通过查看是否存在`/lib/modules/<$version>/kernel/drivers/md/bcache`目录确定bcache是否以内核模块方式存在。
 ## 加载内核模块
+如果bcache不存在于内核中，但是以内核模块方式存在，则可以加载内核模块。
 `sudo modprobe bcache`
-## 安装内核
+## 编译与安装内核
+如果bcache不存在于内核中，也不以内核模块方式存在，则需要编译并安装内核。
 ```
-wget "http://vault.centos.org/7.3.1611/os/Source/SPackages/kernel-3.10.0-514.el7.src.rpm"                    
+wget "https://vault.centos.org/7.3.1611/os/Source/SPackages/kernel-3.10.0-514.el7.src.rpm"                    
 rpm2cpio ./kernel-3.10.0-514.el7.src.rpm | cpio -idmv    //提取rpm包内容,获取内核：linux-3.10.0-514.el7.tar.xz
 make menuconfig    　　　　//内核配置
      Device Drivers 
@@ -108,3 +110,4 @@ bcache支持三种缓存策略：writeback、writethrough、writearoud，缓存�
  * [Linux下块设备缓存之Bcache使用(整理)](https://markrepo.github.io/maintenance/2018/09/10/bcache/)
  * [bcache的使用](https://www.cnblogs.com/sunhaohao/archive/2017/07/03/sunhaohao.html)
  * [bcache使用教程](https://ziyablog.com/266/bcache%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/)
+ * [bcache / 如何使用bcache构建LVM,软RAID / 如何优化bcache](https://developer.aliyun.com/article/60734)
