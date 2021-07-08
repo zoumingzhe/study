@@ -6,35 +6,92 @@ bcache（block cache）允许将SSD用作另一块设备（通常是机械盘盘
 ***操作前请备份重要数据。***
  - 磁盘格式在3.18中发生了变化，先前格式不向后兼容。注意：这只适用于使用bcache-dev分支编译的用户，内置到Linux内核的版本不受影响。
 
-# bcache安装
+# 安装bcache
 Bcache从3.10开始正式并入内核主线，通过`uname -r`命令查看内核版本号。
-## 安装编译依赖
+通过查看是否存在`/sys/fs/bcache`目录确定bcache是否存在于内核中。
+通过查看是否存在`/lib/modules/<$version>/kernel/drivers/md/bcache`目录确定bcache是否以内核模块方式存在。
+## 加载内核模块
+`sudo modprobe bcache`
+## 安装内核
+```
+wget "http://vault.centos.org/7.3.1611/os/Source/SPackages/kernel-3.10.0-514.el7.src.rpm"                    
+rpm2cpio ./kernel-3.10.0-514.el7.src.rpm | cpio -idmv    //提取rpm包内容,获取内核：linux-3.10.0-514.el7.tar.xz
+make menuconfig    　　　　//内核配置
+     Device Drivers 
+         ->Multiple devices driver support (RAID and LVM)
+             -><*> Block device as cache
+make bzImage (V=1)　　　　 //编译内核
+make modules　　　　　　　　//编译内核模块
+make modules_install      //拷贝内核模块的.ko文件到/lib/modules下
+make install              //拷贝initrd和bzImage到boot目录下，并修改开机启动配置文件
+reboot                    //重启，根据菜单选择对应内核版本进入
+```
+## 安装bcache-tools
+### Ubuntu
+`sudo apt-get install bcache-tools`
+### CentOS
+#### 安装编译依赖
 `yum -y install pkg-config libblkid-devel`
-## 编译安装bcache-tools
-### 获取源码
+#### 获取源码
 `git clone http://evilpiepirate.org/git/bcache-tools.git`
-### 编译安装
+#### 编译安装
 `make && make install`
 
 # bcache命令解析
 ## 擦除超块
 `wipefs -a <dev>`
-## 创建数据盘
+
+## 格式化硬盘分区
+### 格式化数据盘
 `make-bcache -B <dev>`
-## 创建缓存盘
+### 格式化缓存盘
 `make-bcache -C <dev>`
-## 添加缓存盘
-`echo <CSET-UUID> > /sys/block/bcache<N>/bcache/attach`
-## 删除缓存盘
-`echo <CSET-UUID> > /sys/block/bcache<N>/bcache/detach`
-## 查看CSET-UUID
+
+## 注册与注销
+### 设备注册
+格式化完成后需要完成设备的注册，使内核获取设备。
+`echo <dev> > /sys/fs/bcache/register`
+也可以通过下面的方式实现设备自动注册：
+`echo /dev/sd* > /sys/fs/bcache/register_quiet`
+### 设备注销
+`echo 1 > /sys/fs/bcache/<CSET-UUID>/unregister`
+
+## 绑定与解绑
+完成注册的backing设备需要在使用之前绑定到bcache，否则功能无法启用。
+### 查看CSET-UUID
 `bcache-super-show <dev>`
+### 设备绑定
+`echo <CSET-UUID> > /sys/block/bcache<N>/bcache/attach`
+### 设备解绑
+`echo <CSET-UUID> > /sys/block/bcache<N>/bcache/detach`
+
+## 停用与启用
+### 设备停用
+`echo 1 > /sys/block/bcache<N>/bcache/stop`
+
+## 查看信息
+### 查看设备信息
+`bcache-super-show -f <dev>`
+### 查看state
+`cat /sys/block/bcache<N>/bcache/state`
+ - no cache：该backing设备没有attach任何caching设备
+ - clean：一切正常，缓存是干净的
+ - dirty：一切正常，已启用回写，缓存是脏的
+ - inconsistent：遇到问题，后台设备与缓存设备不同步
+### 查看缓存数据量
+`cat /sys/block/bcache<N>/bcache/dirty_data`
+### 查看writeback信息
+`cat /sys/block/bcache0/bcache/writeback_`
 
 # bcache缓存策略
 bcache支持三种缓存策略：writeback、writethrough、writearoud，缓存策略可动态修改，默认使用writethrough。
  - writeback（写回）：数据先写入缓存盘，然后等待系统将数据回写入后端数据盘中。
  - writethrough（写通）：数据同时写入缓存盘和后端数据盘。
  - writearoud：数据直接写入后端数据盘。
+## 查看缓存策略
+`cat /sys/block/bcache<N>/bcache/cache_mode`
+## 更改缓存策略
+`echo <cache_mode> > /sys/block/bcache<N>/bcache/cache_mode`
 ## 写命中write-hit
 对于writeback，先写入缓存盘，并使用dirty标志位记录缓存的修改。
 对于writeback，先写入缓存盘，再写入数据盘。
@@ -47,4 +104,7 @@ bcache支持三种缓存策略：writeback、writethrough、writearoud，缓存�
 # 参考
  * [Bcache - ArchWiki](https://wiki.archlinux.org/title/bcache)
  * [bcache kernel documentation](https://www.kernel.org/doc/Documentation/bcache.txt)
+ * [bcache配置方法 - Linux内核之bcache 1.1](https://blog.csdn.net/liangchen0322/article/details/50322635)
  * [Linux下块设备缓存之Bcache使用(整理)](https://markrepo.github.io/maintenance/2018/09/10/bcache/)
+ * [bcache的使用](https://www.cnblogs.com/sunhaohao/archive/2017/07/03/sunhaohao.html)
+ * [bcache使用教程](https://ziyablog.com/266/bcache%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/)
