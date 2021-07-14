@@ -36,6 +36,8 @@ reboot                    //重启，根据菜单选择对应内核版本进入
 `yum -y install pkg-config libblkid-devel`
 #### 获取源码
 `git clone http://evilpiepirate.org/git/bcache-tools.git`
+#### 检出版本
+`git checkout v1.0.8`
 #### 编译安装
 `make && make install`
 
