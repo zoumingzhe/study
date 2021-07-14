@@ -10,24 +10,38 @@ bcache（block cache）允许将SSD用作另一块设备（通常是机械盘盘
 Bcache从3.10开始正式并入内核主线，通过`uname -r`命令查看内核版本号。
 通过查看是否存在`/sys/fs/bcache`目录确定bcache是否存在于内核中。
 通过查看是否存在`/lib/modules/<$version>/kernel/drivers/md/bcache`目录确定bcache是否以内核模块方式存在。
+
 ## 加载内核模块
 如果bcache不存在于内核中，但是以内核模块方式存在，则可以加载内核模块。
 `sudo modprobe bcache`
+
 ## 编译与安装内核
 如果bcache不存在于内核中，也不以内核模块方式存在，则需要编译并安装内核。
+### 下载内核
+`wget "https://vault.centos.org/8.0.1905/BaseOS/Source/SPackages/kernel-4.18.0-80.7.1.el8_0.src.rpm"`
+### 安装内核RPM包
 ```
-wget "https://vault.centos.org/7.3.1611/os/Source/SPackages/kernel-3.10.0-514.el7.src.rpm"                    
-rpm2cpio ./kernel-3.10.0-514.el7.src.rpm | cpio -idmv    //提取rpm包内容,获取内核：linux-3.10.0-514.el7.tar.xz
-make menuconfig    　　　　//内核配置
-     Device Drivers 
-         ->Multiple devices driver support (RAID and LVM)
-             -><*> Block device as cache
-make bzImage (V=1)　　　　 //编译内核
-make modules　　　　　　　　//编译内核模块
-make modules_install      //拷贝内核模块的.ko文件到/lib/modules下
-make install              //拷贝initrd和bzImage到boot目录下，并修改开机启动配置文件
-reboot                    //重启，根据菜单选择对应内核版本进入
+mkdir -p ~/rpmbuild/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}
+echo "%_topdir $(echo $HOME)/rpmbuild" > ~/.rpmmacros
+# rpm2cpio kernel-4.18.0-80.7.1.el8_0.src.rpm | cpio -idmv 
+rpm -ivh kernel-4.18.0-80.7.1.el8_0.src.rpm 2>&1 | grep -v exist
 ```
+### 解压内核源码包
+```
+cd ~/rpmbuild/SOURCES/
+xz -d linux-4.18.0-80.7.1.el8_0.tar.xz
+tar xvf linux-4.18.0-80.7.1.el8_0.tar
+cd linux-4.18.0-80.7.1.el8_0
+```
+### 修改内核配置
+```
+make mrproper
+cp /boot/config-$(uname -r) ./.config
+vim .config
+```
+### 编译内核
+`make rpm -j 32`
+
 ## 安装bcache-tools
 ### Ubuntu
 `sudo apt-get install bcache-tools`
@@ -113,3 +127,6 @@ bcache支持三种缓存策略：writeback、writethrough、writearoud，缓存�
  * [bcache的使用](https://www.cnblogs.com/sunhaohao/archive/2017/07/03/sunhaohao.html)
  * [bcache使用教程](https://ziyablog.com/266/bcache%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/)
  * [bcache / 如何使用bcache构建LVM,软RAID / 如何优化bcache](https://developer.aliyun.com/article/60734)
+ * [centos7 build centos8的v4.18 kernel 带bcache](https://zhuanlan.zhihu.com/p/90558003)
+ * [智能预取](https://support.huaweicloud.com/ug-ip-kunpengaccel/ug-ip-kunpengaccel.pdf)
+ * [鲲鹏 BoostKit 分布式存储使能套件](https://support.huaweicloud.com/usermanual-kunpengsdss/kunpengsdss-usermanual.pdf)
