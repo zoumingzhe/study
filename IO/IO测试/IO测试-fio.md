@@ -23,8 +23,25 @@ yum -y install fio
 ```
 
 # fio命令解析
+fio [options] [job options] <job file(s)>
+
+## fio job file
+ini文件格式
+
+## fio ioengine
+`fio --enghelp`
+
+## fio write log
+ - write_bw_log
+ - write_iops_log
+ - write_lat_log
+ - log_avg_msec
+
+# fio log file formats
 
 # 参考
-1.[fio](http://freshmeat.sourceforge.net/projects/fio)
-
-2.[fio I/O测试工具](https://www.oschina.net/p/fio)
+ * [fio](http://freshmeat.sourceforge.net/projects/fio)
+ * [fio I/O测试工具](https://www.oschina.net/p/fio)
+ * [fio使用指南（最全的参数说明）](https://blog.csdn.net/sch0120/article/details/76154205)
+ * [fio(1) - Linux man page](https://linux.die.net/man/1/fio)
+ * [Welcome to FIO’s documentation!](https://fio.readthedocs.io/en/latest/)
