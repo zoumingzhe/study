@@ -13,6 +13,9 @@ pci scan
 +++++++(.\drivers\pci\probe.c:L1428)pci_scan_slot
 ++++++++(.\drivers\pci\probe.c:L1335)pci_scan_single_device
 +++++++(.\drivers\pci\probe.c:L723)pci_scan_bridge
+++++++++(.\drivers\pci\search.c:L80)pci_find_bus
++++++++++(.\drivers\pci\search.c:L105)pci_find_next_bus
++++++++++(.\drivers\pci\search.c:L55)pci_do_find_bus
 ++++++++(.\drivers\pci\probe.c:L684)pci_add_new_bus
 ++++++++(.\drivers\pci\probe.c:L1610)pci_scan_child_bus
 ++++++(.\drivers\pci\probe.c:L1801)pci_bus_update_busn_res_end
