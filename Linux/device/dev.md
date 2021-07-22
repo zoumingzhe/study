@@ -18,3 +18,5 @@ dev
 # 参考
  * [《Linux Device Drivers, Second Edition by Jonathan Corbet, Alessandro Rubini》]()
  * [Linux 设备中的 major 和 minor 数字](http://einverne.github.io/post/2020/06/linux-device-major-and-minor-number.html)
+ * [Linux的主设备号和次设备号](http://blog.chinaunix.net/uid-24460251-id-2606762.html)
+ * [linux设备号详解](https://blog.csdn.net/zjjyliuweijie/article/details/7001383)
