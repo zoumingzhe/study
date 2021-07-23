@@ -1,4 +1,5 @@
-# /dev/null
+linux /dev/null
+===============
 /dev/null空设备是一个特殊的伪文件文件设备，写入到/dev/null的内容都会被丢弃（但报告写入操作成功），读取/dev/null则会立即得到一个EOF。
 
 # 使用/dev/null禁止输出
