@@ -60,6 +60,7 @@ vim .config
 `wipefs -a <dev>`
 
 ## 格式化硬盘分区
+`make-bcache --wipe-bcache -C <dev> -B <dev>`
 ### 格式化数据盘
 `make-bcache -B <dev>`
 ### 格式化缓存盘
