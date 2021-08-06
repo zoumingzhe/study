@@ -1,4 +1,5 @@
-# chmod
+chmod
+=====
 Usage: chmod [OPTION]... MODE[,MODE]... FILE...
   or:  chmod [OPTION]... OCTAL-MODE FILE...
   or:  chmod [OPTION]... --reference=RFILE FILE...
@@ -22,4 +23,4 @@ chmod（change mode）命令用于修改用户对文件的权限。
 |  0  | 无            | --- |  000  |
 
 # 参考
-1.[Linux chmod 命令](https://www.runoob.com/linux/linux-comm-chmod.html)
+ * [Linux chmod 命令](https://www.runoob.com/linux/linux-comm-chmod.html)
