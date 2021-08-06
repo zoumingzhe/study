@@ -1,5 +1,5 @@
-dev
-===
+linux dev
+=========
 
 # major and minor
 每个设备节点的类型（block或character）和数字作为内核的标识符。
