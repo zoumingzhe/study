@@ -1,4 +1,5 @@
-# source
+source
+======
 source filename [arg]
  - filename：文件名。
  - arg：参数。
@@ -17,6 +18,5 @@ source filename 与 sh filename 及 ./filename 执行脚本的区别：
  - source filename 只是简单地读取脚本里面的语句依次在当前shell里面执行，没有建立新的子shell，脚本里面所有新建、改变的变量都会保存在当前shell里面。
 
 # 参考
-1.[Linux下source命令详解](https://blog.csdn.net/violet_echo_0908/article/details/52056071)
-
-2.[source命令](https://www.jianshu.com/p/63ded646d4cd)
+ * [Linux下source命令详解](https://blog.csdn.net/violet_echo_0908/article/details/52056071)
+ * [source命令](https://www.jianshu.com/p/63ded646d4cd)

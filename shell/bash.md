@@ -5,6 +5,8 @@ Bash是Bourne shell的后继兼容版本与开放源代码版本，它的名称�
 
 Bash是一个命令处理器，通常运行于文本窗口中，并能执行用户直接输入的命令。Bash还能从文件中读取命令，这样的文件称为脚本。和其他Unix shell 一样，它支持文件名替换（通配符匹配）、管道、here文档、命令替换、变量，以及条件判断和循环遍历的结构控制语句。包括关键字、语法在内的基本特性全部是从sh借鉴过来的。其他特性，例如历史命令，是从csh和ksh借鉴而来。总的来说，Bash虽然是一个满足POSIX规范的shell，但有很多扩展。
 
+[bash在线模拟](https://www.runoob.com/try/runcode.php?filename=helloworld&type=bash)
+
 # 参考
 1.[Bash](https://baike.baidu.com/item/bash)
 

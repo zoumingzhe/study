@@ -1,4 +1,5 @@
-# su
+su
+====
 su
 
 ## 切换用户时指定shell
@@ -7,4 +8,4 @@ sudo su -s /bin/sh - user
 ```
 
 # 参考
-1.[su](su)
+ * [su](su)
