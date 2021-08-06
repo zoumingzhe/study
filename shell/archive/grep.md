@@ -1,4 +1,5 @@
-# grep
+grep
+====
 grep
 
 # 搜索当前目录下所有文件
@@ -7,4 +8,4 @@ grep -rn xxx
 ```
 
 # 参考
-1.[grep](grep)
+ * [grep](grep)
