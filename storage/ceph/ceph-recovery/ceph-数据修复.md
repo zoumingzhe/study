@@ -1,12 +1,12 @@
 Ceph 数据修复
 =============
-当PG完成了Peering过程后，处于Active状态的PG就可以对外提供服务了。如果PG的各个副本出现不一致，则需要进行修复。ceph的修复过程有两种：Recovery和Backfill。
+当PG完成了Peering过程后，处于Active状态的PG就可以对外提供服务了。如果PG的各个副本出现不一致，则需要进行修复。
 
-Recovery是仅依据PG日志中的缺失记录来修复不一致的对象。Backfill是PG通过重新扫描所有的对象，对比发现缺失的对象，通过整体拷贝来修复。当一个OSD失效时间过长导致无法根据PG日志来修复，或者新加入的OSD导致数据迁移时，就会启动Backfill过程。
+ceph的修复过程有两种：Recovery和Backfill。Recovery仅依据`PG Log`中的缺失记录修复不一致的对象；Backfill通过重新扫描所有的对象，比对出缺失的对象并修复。当一个OSD失效时间过长导致无法根据`PG Log`来修复，或者新加入的OSD导致数据迁移时，就会启动Backfill过程。
 
-如果需要Recovery，就产生DoRecovery事件，触发修复操作；如果需要Backfill，就会产生RequestBackfill事件来触发Backfill操作。
+对于特定副本的修复，只可能是Recovery和Backfill其中之一。而对于特定PG的修复，则可能既有需要Recovery的OSD，又有需要Backfill的OSD，那么必须先进行Recovery修复，再完成Backfill修复。
 
-PG的修复过程中，如果既有需要Recovery过程的OSD，又有需要Backfill过程的OSD，那么处理过程需要先进行Recovery过程的修复，再完成Backfill过程的修复。
+如果需要Recovery，就产生DoRecovery事件触发修复操作；如果需要Backfill，就会产生RequestBackfill事件来触发Backfill操作。
 
 # LOG BASED PG
 目前，所有Ceph池类型的一致性都是由primary log-based replication来保证的，这适用于纠删码（EC）池和多副本池。

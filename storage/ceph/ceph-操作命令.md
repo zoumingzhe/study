@@ -27,19 +27,25 @@ ceph 操作命令
  - `ceph osd getmap -o osdmap`
  - `osdmaptool --print osdmap`
 ## `ceph osd df`
+## `ceph osd down <osd.n>`
+## `ceph osd up <osd.n>`
+## `ceph osd out <osd.n>`
+## `ceph osd in <osd.n>`
 
 # ceph osd pool
 ## `ceph osd lspools`
 查看POOL列表
 ## `ceph osd pool ls [detail]`
 查看集群POOL列表
-## `ceph osd pool get <poolname> <var>`
+## `ceph osd pool get <poolname> <key>`
 查看POOL变量
+## `ceph osd pool set <poolname> <key> <value>`
+设置POOL变量
 ## `ceph osd pool create <poolname> <int[0-]> {<int[0-]>} {replicated|erasure} {<erasure_code_profile>} {<rule>} {<int>}`
 创建POOL
 ## `ceph osd pool rename <current-poolname> <new-poolname>`
 重命名POOL
-## `ceph osd pool delete <poolname> {<poolname>} {<sure>}`
+## `ceph osd pool delete <poolname> <poolname> --yes-i-really-really-mean-it`
 删除POOL
 ## `ceph osd pool mksnap <poolname> <snap>`
 创建POOL快照
