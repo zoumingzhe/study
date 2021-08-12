@@ -2,8 +2,6 @@ Ceph Peering
 ============
 
 # 概念
-## 
-
  - [Peering](./ceph-concept/ceph-concept-peering.md)
  - [Acting Set](./ceph-concept/ceph-concept-acting_set.md)
  - [Up Set](./ceph-concept/ceph-concept-up_set.md)
@@ -28,7 +26,7 @@ Ceph Peering
 `Peering Interval`是一组最大连续映射（Acting Set和Up Set未改变）epochs的集合。`PG::PeeringMachine`通过`PeeringState::Reset`从一个间隔转换到另一个间隔，而`PG::PeeringState::AdvMap`和`PG::acting_up_affected`会导致PG转换为Reset。
 
 # PEERING DETAILS AND GOTCHAS
-PG:：flushed默认为false，并在PG:：start\u peering\u interval中设置为false。在转换到PG：：PeeringState：：Started时，我们通过PG op sequencer发送一个事务，该事务完成后，发送一个FlushedEvt，将flushed设置为true。在这种情况发生之前，主服务器不能处于活动状态（请参阅PG:：PeeringState:：WaitFlushedPeering）。复制副本可以处于活动状态，但不能服务于操作（写入或读取）。这是必要的，因为在前一个时间间隔的不稳定事务清除之前，我们无法读取ondisk状态。
+PG::flushed默认为false，并在PG::start_peering_interval中设置为false。在转换到PG::PeeringState::Started时，我们通过PG op sequencer发送一个事务，该事务完成后，发送一个FlushedEvt，将flushed设置为true。在这种情况发生之前，主服务器不能处于活动状态（请参阅PG::PeeringState::WaitFlushedPeering）。复制副本可以处于活动状态，但不能服务于操作（写入或读取）。这是必要的，因为在前一个时间间隔的不稳定事务清除之前，我们无法读取ondisk状态。
 
 `PG::flushed`默认为false，并在`PG::start_peering_interval`中设置为false。在转换到`PG::PeeringState::Started`后，通过PG op sequencer发送一个事务，该事务完成后发送一个`FlushedEvt`，将`PG::flushed`设置为true。在`PG::flushed`设置为true之前primary无法进入active状态（参见`PG::PeeringState::WaitFlushedPeering`），replicas则可以进入active状态但不能提供读写操作。这是必要的，因为在前一个时间间隔的不稳定事务被清除之前，是不能够读取磁盘状态的。
 
@@ -137,7 +135,7 @@ struct pg_history_t {
     - 向其发送`PG Log`更新，使其`PG Log`与`primary`的`PG Log`（权威日志）一致，这可能涉及删除歧义对象（divergent object）。
     - 等待其确认`PG Log`条目已持久化。
  9. 此时，`Acting Set`中的所有`OSD`统一了所有元数据，并且（在任何未来`peering`中）将返回包含所有更新的相同`PG Log`条目。
-    - 开始接受客户端写操作（因为所有`OSD`都一致接受这些对象更新）。但是请注意，如果客户端的写操作将被提升到恢复队列的最后，等当前`Acting Set`完全同步之后才将执行写入。
+    - 开始接受客户端写操作（因为所有`OSD`都一致接受这些对象更新）。但是请注意，客户端的写操作将被提升到恢复队列的最后，等当前`Acting Set`完全同步之后才将执行写入。
     - 更新`primary`本地`PG Info`中的`pg_info_t:last_epoch_started`，并指示`Acting Set`中的其他`OSD`执行相同操作。
     - 拉取`primary`没有但其他`OSD`具有的对象数据更新。为了找到所有对象的副本，可能需要查询从`pg_history_t:last_epoch_clean`（恢复完成的最后`epoch`）之后到`pg_info_t:last_epoch_started`（最后一次`peering`完成）之前的其他`past interval`中的`OSD`。
     - 将对象数据更新推送至其他缺失的`OSD`。
