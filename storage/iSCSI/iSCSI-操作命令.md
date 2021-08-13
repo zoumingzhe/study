@@ -77,6 +77,7 @@ iSCSI 操作命令
 
 
 # 参考
- * [targetcli](http://linux.51yip.com/search/targetcli)
+ * [targetcli](http://linux-iscsi.org/wiki/Targetcli)
  * [GETTING STARTED WITH ISCSI](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/managing_storage_devices/getting-started-with-iscsi_managing-storage-devices)
+ * [targetcli](http://linux.51yip.com/search/targetcli)
  * [iSCSI 原理和基础使用](https://www.cnblogs.com/wn1m/p/10700591.html)
