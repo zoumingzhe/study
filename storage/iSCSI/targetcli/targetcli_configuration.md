@@ -110,13 +110,165 @@ Whether or not to display status in tree.
 ### /backstores/block
 #### /backstores/block/\<name>
 **attribute config group**
+ - alua_support=1 [ro]
+
+
+ - block_size=512
+Block size of the underlying device.
+
+ - emulate_3pc=1
+If set to 1, enable Third Party Copy.
+
+ - emulate_caw=1
+If set to 1, enable Compare and Write.
+
+ - emulate_dpo=1
+If set to 1, turn on Disable Page Out.
+
+ - emulate_fua_read=1
+If set to 1, enable Force Unit Access read.
+
+ - emulate_fua_write=1
+If set to 1, enable Force Unit Access write.
+
+ - emulate_model_alias=1
+If set to 1, use the backend device name for the model alias.
+
+ - emulate_pr=1
+If set to 1, enable SCSI Reservations.
+
+ - emulate_rest_reord=0
+If set to 0, the Queue Algorithm Modifier is Restricted Reordering.
+
+ - emulate_tas=1
+If set to 1, enable Task Aborted Status.
+
+ - emulate_tpu=0
+If set to 1, enable Thin Provisioning Unmap.
+
+ - emulate_tpws=0
+If set to 1, enable Thin Provisioning Write Same.
+
+ - emulate_ua_intlck_ctrl=0
+If set to 1, enable Unit Attention Interlock.
+
+ - emulate_write_cache=0
+If set to 1, turn on Write Cache Enable.
+
+ - enforce_pr_isids=1
+If set to 1, enforce persistent reservation ISIDs.
+
+ - force_pr_aptpl=0
+If set to 1, force SPC-3 PR Activate Persistence across Target Power Loss operation.
+
+ - hw_block_size=512 [ro]
+Hardware block size in bytes.
+
+ - hw_max_sectors=131072 [ro]
+Maximum number of sectors the hardware can transfer at once.
+
+ - hw_pi_prot_type=0 [ro]
+If non-zero, DIF protection is enabled on the underlying hardware.
+
+ - hw_queue_depth=256 [ro]
+Hardware queue depth.
+
+ - is_nonrot=1
+If set to 1, the backstore is a non rotational device.
+
+ - max_unmap_block_desc_count=1
+Maximum number of block descriptors for UNMAP.
+
+ - max_unmap_lba_count=131072
+Maximum number of LBA for UNMAP.
+
+ - max_write_same_len=131072
+Maximum length for WRITE_SAME.
+
+ - optimal_sectors=131072
+Optimal request size in sectors.
+
+ - pgr_support=1 [ro]
+
+
+ - pi_prot_format=0
+DIF protection format.
+
+ - pi_prot_type=0
+DIF protection type.
+
+ - pi_prot_verify=0
+
+
+ - queue_depth=256
+Queue depth.
+
+ - unmap_granularity=131072
+UNMAP granularity.
+
+ - unmap_granularity_alignment=0
+UNMAP granularity alignment.
+
+ - unmap_zeroes_data=131072
+If set to 1, zeroes are read back after an UNMAP.
+
 ##### /backstores/block/\<name>/alua
 ###### /backstores/block/\<name>/alua/default_tg_pt_gp
 **alua config group**
+ - alua_access_state=0
+The alua_access_state alua parameter.
+
+ - alua_access_status=0
+The alua_access_status alua parameter.
+
+ - alua_access_type=3
+The alua_access_type alua parameter.
+
+ - alua_support_active_nonoptimized=1
+The alua_support_active_nonoptimized alua parameter.
+
+ - alua_support_active_optimized=1
+The alua_support_active_optimized alua parameter.
+
+ - alua_support_lba_dependent=0 [ro]
+The alua_support_lba_dependent alua parameter.
+
+ - alua_support_offline=1
+The alua_support_offline alua parameter.
+
+ - alua_support_standby=1
+The alua_support_standby alua parameter.
+
+ - alua_support_transitioning=1
+The alua_support_transitioning alua parameter.
+
+ - alua_support_unavailable=1
+The alua_support_unavailable alua parameter.
+
+alua_write_metadata=0
+The alua_write_metadata alua parameter.
+
+ - implicit_trans_secs=0
+The implicit_trans_secs alua parameter.
+
+ - members=[{'tpgt': 1, 'driver': 'iSCSI', 'target': 'iqn.2003-01.org.linux-iscsi.node-1.x8664:sn.956ba6728c8c', 'lun': 0] [ro]
+The members alua parameter.
+
+ - nonop_delay_msecs=100
+The nonop_delay_msecs alua parameter.
+
+ - preferred=0
+The preferred alua parameter.
+
+ - tg_pt_gp_id=0 [ro]
+The tg_pt_gp_id alua parameter.
+
+ - trans_delay_msecs=0
+The trans_delay_msecs alua parameter.
 
 ## /iscsi
 **discovery_auth config group**
-如果启用了发现身份验证，则initiator必须通过发送匹配的password和userid登录凭据来提供单向身份验证。如果也设置了mutual_userid和mutual_password，则target必须通过其登录凭据进行响应以相互身份验证。
+如果启用了发现身份验证，则initiator必须通过发送匹配的password和userid登录凭据来提供单向身份验证。如果也设置了mutual_userid和mutual_password，则target必须通过其登录凭据进行响应以双向身份验证。
 
  - enable = \<bool>
 The enable discovery_auth parameter.
@@ -256,9 +408,6 @@ Deprecated according to RFC 7143.
 
  - TargetAlias = \<string>
 Human-readable target name or description.
-
-
-
 
 ##### /iscsi/\<wwn>/tpg1/acls
 ###### /iscsi/\<wwn>/tpg1/acls/\<wwn>
