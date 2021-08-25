@@ -1,6 +1,27 @@
 iSCSI 操作命令
 =============
 
+# 查看版本号
+ - `iscsid -v`
+ - `targetcli -v`
+
+# initiator
+`yum -y install iscsi-initiator-utils`
+
+## InitiatorName
+### iscsi-iname
+`iscsi-iname [-p <iqn>]`
+
+每次调用时生成一个唯一的iSCSI节点名称。
+
+### /etc/iscsi/initiatorname.iscsi
+```shell
+# 生成iqn
+echo "InitiatorName=`iscsi-iname`" > /etc/iscsi/initiatorname.iscsi
+# 定义别名
+echo "InitiatorAlias=<alias>" >> /etc/iscsi/initiatorname.iscsi
+```
+
 # [targetcli](https://github.com/Datera/targetcli)
 基本语法：`[TARGET_PATH] COMMAND_NAME [OPTIONS]`
 
@@ -114,7 +135,6 @@ Create an iSCSI Network Portal with specified ip_address and ip_port.
 
 `delete <ip_address> <ip_port>`
 Delete the iSCSI Network Portal with the ip_address and ip_port.
-
 
 # 参考
  * [targetcli](http://linux-iscsi.org/wiki/Targetcli)
