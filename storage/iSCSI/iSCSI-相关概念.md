@@ -38,6 +38,8 @@ Portal是一个IP:port对，远程系统通过Portal访问iSCSI Target。
 
 # LUN （Logical Unit Number）
 
+# ALUA （Asymmetric Logical Unit Assignment）
+非对称逻辑单元分配（ALUA），是一种多路径方法。
 
 # RFC
  * [rfc3720](https://datatracker.ietf.org/doc/html/rfc3720)
@@ -55,3 +57,4 @@ Portal是一个IP:port对，远程系统通过Portal访问iSCSI Target。
 # 参考
  * [Linux-IO](http://www.linux-iscsi.org/wiki/Main_Page)
  * [iSCSI Naming Conventions](https://docs.vmware.com/en/VMware-vSphere/7.0/com.vmware.vsphere.storage.doc/GUID-686D92B6-A2B2-4944-8718-F1B74F6A2C53.html)
+ * [Asymmetric Logical Unit Assignment](http://linux-iscsi.org/wiki/Asymmetric_Logical_Unit_Assignment)
