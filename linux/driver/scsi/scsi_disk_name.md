@@ -1,7 +1,8 @@
 SCSI disk (sd) name
 ===================
 
-# Linux-v5.9
+# linux-v5.9
+linux v5.9 `.\drivers\scsi`
 ```C
 /**
  *	sd_format_disk_name - format disk name
