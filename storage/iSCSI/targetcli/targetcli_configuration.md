@@ -27,13 +27,13 @@ targetcli configuration
 
 # variable types
 The following variable types are used for targetcli command parameters and attributes:
- - bool: Boolean. Values: {TRUE|FALSE}
- - bool-iSCSI: Boolean per RFC 3720. Values: {Yes|No}
+ - bool: Boolean. Values: `{TRUE|FALSE}`
+ - bool-iSCSI: Boolean per RFC 3720. Values: `{Yes|No}`
  - enum: List of alphanumeric values.
- - integer: Digits. Values: [0–9]
+ - integer: Digits. Values: `[0–9]`
  - string: Alphanumeric characters
- - color: {black|blue|cyan|default|green|magenta|red|white|yellow}
- - loglevel: {critical|debug|error|info|warning}
+ - color: `{black|blue|cyan|default|green|magenta|red|white|yellow}`
+ - loglevel: `{critical|debug|error|info|warning}`
 
 # global config group
  - auto_add_default_portal
