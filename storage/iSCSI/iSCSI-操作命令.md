@@ -34,19 +34,46 @@ COMMAND to get more information.
 *一个host只能同时执行一个targetcli。*
 
 ## COMMANDS
-  - `bookmarks action [bookmark]`
-  - `cd [path]`：进入目录
-  - `exit`：退出targetcli命令行
-  - `get [group] [parameter...]`
-  - `help [topic]`
-  - `info`
-  - `ls [path] [depth]`：显示当前目录的详细信息
-  - `pwd`：显示当前目录
-  - `refresh`：刷新
-  - `set [group] [parameter=value...]`
-  - `status`：显示当前目录的摘要信息
+ - `bookmarks action [bookmark]`
+ - `cd [path]`：进入目录
+ - `clearconfig [confirm]`
+ - `exit`：退出targetcli命令行
+ - `get [group] [parameter...]`
+ - `help [topic]`：帮助
+ - `info`
+ - `ls [path] [depth]`：显示当前目录的详细信息
+ - `pwd`：显示当前目录
+ - `refresh`：刷新
+ - `restoreconfig [savefile] [clear_existing] [target] [storage_object]`
+ - `saveconfig [savefile]`
+ - `set [group] [parameter=value...]`
+ - `status`：显示当前目录的摘要信息
+ - `version`
 
-## get 命令
+## configuration
+### saveconfig
+`saveconfig [savefile]`
+
+将当前配置保存至一个配置文件中，以便在下次启动时恢复。
+
+默认值：
+ - savefile=/etc/target/saveconfig.json
+
+### restoreconfig
+`restoreconfig [savefile] [clear_existing] [target] [storage_object]`
+
+从配置文件恢复配置。
+
+默认值：
+ - savefile=/etc/target/saveconfig.json
+ - clear_existing=False
+
+### clearconfig
+`clearconfig [confirm]`
+
+删除所有backstore和target配置。
+
+### get group configuration parameters value
 `get [<group>] [<parameter> ...]`
 
 列出给定组中的一个或多个配置参数的值。
@@ -55,14 +82,14 @@ COMMAND to get more information.
 
 若无指定组，则列出所有可用的组。
 
-例如：`get global auto_add_mapped_luns`
+例如：`get global color_mode loglevel_console`
 
-## set 命令
+### set group configuration parameters value
 `set [<group>] [<parameter>=<value> ...]`
 
 设置给定组中的一个或多个配置参数的值。
 
-例如：`set global auto_add_mapped_luns=true`
+例如：`set global color_mode=true loglevel_console=info`
 
 ## 后端存储 /backstores
 ### /backstores/block
