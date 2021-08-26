@@ -41,11 +41,14 @@ Portal是一个IP:port对，远程系统通过Portal访问iSCSI Target。
 # ALUA （Asymmetric Logical Unit Assignment）
 非对称逻辑单元分配（ALUA），是一种多路径方法。
 
+# iSNS （Internet Storage Name Service）
+
 # RFC
  * [rfc3720](https://datatracker.ietf.org/doc/html/rfc3720)
  * [rfc3721](https://datatracker.ietf.org/doc/html/rfc3721)
  * [rfc3722](https://datatracker.ietf.org/doc/html/rfc3722)
  * [rfc3980](https://datatracker.ietf.org/doc/html/rfc3980)
+ * [rfc4171](https://datatracker.ietf.org/doc/html/rfc4171)
  * [rfc4850](https://datatracker.ietf.org/doc/html/rfc4850)
  * [rfc5046](https://datatracker.ietf.org/doc/html/rfc5046)
  * [rfc5047](https://datatracker.ietf.org/doc/html/rfc5047)
