@@ -1,2 +1,16 @@
+# python
+*.py[cod]
+
+# packages
+*.egg-info
+*.egg*
+dist
+build
+
+# setup
+AUTHORS
+ChangeLog
+
+# windows
 Thumbs.db
 Thumbs.db:encryptable
