@@ -8,12 +8,12 @@ iSCSI访问控制包括：[Targetcli Discovery Control](./targetcli/targetcli_di
 
 # targetcli启用身份验证
 ## TPG启用身份验证
-`/iscsi/<IQN>/tpg1> set attribute authentication=1`
+`/iscsi/<IQN>/<TPG>> set attribute authentication=1`
 
 **警告：设置为0时将禁用身份验证，这会导致ACLs中任一客户端（initiator）iqn都可以访问target而无需验证密码。**
 
 # TPG身份验证方式
-`/iscsi/<IQN>/tpg1> set parameter AuthMethod=CHAP`
+`/iscsi/<IQN>/<TPG>> set parameter AuthMethod=CHAP`
 
 # Discovery Control
 ## CHAP Initiator Discovery Authentication

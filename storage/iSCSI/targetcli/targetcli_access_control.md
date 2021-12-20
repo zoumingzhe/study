@@ -9,7 +9,7 @@ LUN访问身份验证有三种基本设置：演示模式（demo mode）、单�
 
 启用“演示模式”：
 ```shell
-/iscsi/<IQN>/tpg1> set attribute authentication=0 demo_mode_write_protect=0 generate_node_acls=1 cache_dynamic_acls=1
+/iscsi/<IQN>/<TPG>> set attribute authentication=0 demo_mode_write_protect=0 generate_node_acls=1 cache_dynamic_acls=1
 Parameter demo_mode_write_protect is now '0'.
 Parameter authentication is now '0'.
 Parameter generate_node_acls is now '1'.
@@ -25,11 +25,11 @@ Parameter cache_dynamic_acls is now '1'.
 设置initiator的单向CHAP登录信息，该信息包括来自initiator的userid（login name）和password（target secret）：
 
 ```shell
-/iscsi/<IQN>/tpg1/acls/<IQN>> set auth userid=iqn.2003-01.org.linux-iscsi.demo:auth
+/iscsi/<IQN>/<TPG>/acls/<IQN>> set auth userid=iqn.2003-01.org.linux-iscsi.demo:auth
 Parameter userid is now 'iqn.2003-01.org.linux-iscsi.demo:auth'.
-/iscsi/<IQN>/tpg1/acls/<IQN>> set auth password=password_demo
+/iscsi/<IQN>/<TPG>/acls/<IQN>> set auth password=password_demo
 Parameter password is now 'password_demo'.
-/iscsi/<IQN>/tpg1/acls/<IQN>> get auth
+/iscsi/<IQN>/<TPG>/acls/<IQN>> get auth
 AUTH CONFIG GROUP
 =================
 mutual_password=
@@ -55,15 +55,15 @@ The userid auth parameter.
  - initiator的mutual_userid（login name）和mutual_password（initiator secret）。
 
 ```shell
-/iscsi/<IQN>/tpg1/acls/<IQN>> set auth userid=iqn.2003-01.org.linux-iscsi.demo:auth
+/iscsi/<IQN>/<TPG>/acls/<IQN>> set auth userid=iqn.2003-01.org.linux-iscsi.demo:auth
 Parameter userid is now 'iqn.2003-01.org.linux-iscsi.demo:auth'.
-/iscsi/<IQN>/tpg1/acls/<IQN>> set auth password=password_demo
+/iscsi/<IQN>/<TPG>/acls/<IQN>> set auth password=password_demo
 Parameter password is now 'password_demo'.
-/iscsi/<IQN>/tpg1/acls/<IQN>> set auth mutual_userid=iqn.2003-01.org.linux-iscsi.demo:auth_mutual
+/iscsi/<IQN>/<TPG>/acls/<IQN>> set auth mutual_userid=iqn.2003-01.org.linux-iscsi.demo:auth_mutual
 Parameter mutual_userid is now 'iqn.2003-01.org.linux-iscsi.demo:auth_mutual'.
-/iscsi/<IQN>/tpg1/acls/<IQN>> set auth mutual_password=password_demo_mutual
+/iscsi/<IQN>/<TPG>/acls/<IQN>> set auth mutual_password=password_demo_mutual
 Parameter mutual_password is now 'password_demo_mutual'.
-/iscsi/<IQN>/tpg1/acls/<IQN>> get auth
+/iscsi/<IQN>/<TPG>/acls/<IQN>> get auth
 AUTH CONFIG GROUP
 =================
 mutual_password=password_demo_mutual
@@ -91,7 +91,7 @@ The userid auth parameter.
 首先，必须为TPG中的所有端点启用公共TPG身份验证：
 
 ```shell
-/iscsi/<IQN>/tpg1> set attribute authentication=1 demo_mode_write_protect=0 generate_node_acls=1 cache_dynamic_acls=1
+/iscsi/<IQN>/<TPG>> set attribute authentication=1 demo_mode_write_protect=0 generate_node_acls=1 cache_dynamic_acls=1
 Parameter demo_mode_write_protect is now '0'.
 Parameter authentication is now '1'.
 Parameter generate_node_acls is now '1'.
@@ -103,13 +103,13 @@ Parameter cache_dynamic_acls is now '1'.
  - initiator的mutual_userid（login name）和mutual_password（initiator secret）。
 
 ```shell
-/iscsi/<IQN>/tpg1/acls/<IQN>> set auth userid=iqn.2003-01.org.linux-iscsi.demo:auth
+/iscsi/<IQN>/<TPG>/acls/<IQN>> set auth userid=iqn.2003-01.org.linux-iscsi.demo:auth
 Parameter userid is now 'iqn.2003-01.org.linux-iscsi.demo:auth'.
-/iscsi/<IQN>/tpg1/acls/<IQN>> set auth password=password_demo
+/iscsi/<IQN>/<TPG>/acls/<IQN>> set auth password=password_demo
 Parameter password is now 'password_demo'.
-/iscsi/<IQN>/tpg1/acls/<IQN>> set auth mutual_userid=iqn.2003-01.org.linux-iscsi.demo:auth_mutual
+/iscsi/<IQN>/<TPG>/acls/<IQN>> set auth mutual_userid=iqn.2003-01.org.linux-iscsi.demo:auth_mutual
 Parameter mutual_userid is now 'iqn.2003-01.org.linux-iscsi.demo:auth_mutual'.
-/iscsi/<IQN>/tpg1/acls/<IQN>> set auth mutual_password=password_demo_mutual
+/iscsi/<IQN>/<TPG>/acls/<IQN>> set auth mutual_password=password_demo_mutual
 Parameter mutual_password is now 'password_demo_mutual'.
 ```
 
