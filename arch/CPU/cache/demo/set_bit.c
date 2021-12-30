@@ -3,7 +3,7 @@
 #include <string.h>
 #include <pthread.h>
 
-#define thdnum 2 // max 64
+#define thdnum 32 // max 64
 #define bitnum 8 * 1024
 #define opsnum bitnum * 1024
 unsigned char bits[bitnum*1024];
@@ -34,6 +34,9 @@ void test_set_bits()
     clock_t start_t = clock();
     for (int i = 0; i < opsnum; i++)
     {
+        // (   0-1023)   0 ... 0
+        // (1024-2047)   1 ... 1
+        //     ...
         int bitn = i / 1024;
         set_bit(bitn, bits);
     }
@@ -48,6 +51,13 @@ void* test_set_bits_thd(void* thd)
     clock_t start_t = clock();
     for (int i = 0; i < opsnum / thdnum; i++)
     {
+        // thd0 (   0-1023)   0 ... 0
+        // thd0 (1024-2047)   t ... t
+        // thd0 (2048-3071)  2t ... 2t
+        //          ...
+        // thd1 (   0-1023)   1 ... 1
+        // thd1 (1024-2047) t+1 ... t+1
+        //          ...
         int bitn = i / 1024;
         bitn *= thdnum;
         bitn += tid;
