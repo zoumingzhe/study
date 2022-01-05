@@ -2,14 +2,22 @@ iSCSI 访问控制
 ==============
 
 # iSCSI 访问控制层次
-
 ## Network Portal
+监听特定的ip地址和端口号。
+ - ip address
+ - port
 
 ## ACL
-
 ### Authentication
+身份验证，包括：initiatorname、username、password。
+ - Discovery Authentication
+ - Access Authentication
 
 ### Mapped LUN
+限制可访问的LUN。
+
+## Write Protect
+写保护（只读）。
 
 # iSCSI Discovery and Access
 iSCSI身份验证包括：[Targetcli Discovery Control](./targetcli/targetcli_discovery_control.md)和[Targetcli Access Control](./targetcli/targetcli_access_control.md)。
