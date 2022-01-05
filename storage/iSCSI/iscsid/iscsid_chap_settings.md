@@ -1,9 +1,9 @@
 iscsid CHAP Settings
 ====================
 
-Linux主机`/etc/iscsi/initiatorname.iscsi`配置的InitiatorName。
+Linux主机可以通过`/etc/iscsi/initiatorname.iscsi`配置InitiatorName。
 
-Linux主机`/etc/iscsi/iscsid.conf`或`/etc/iscsid.conf`配置的CHAP段落：
+Linux主机可以通过`/etc/iscsi/iscsid.conf`或`/etc/iscsid.conf`配置CHAP段落：
 ```shell
 # *************
 # CHAP Settings
@@ -66,15 +66,15 @@ discovery.sendtargets.auth.password_in = <CHAP secret for clustered system>
 
 当登入需要身份验证的target且需修改对应session的验证信息时：
  - 开启验证
-`iscsiadm -m node -T <iqn> -o update -n node.session.auth.authmethod -v=CHAP`
+`iscsiadm -m node -T <iqn> -o update -n node.session.auth.authmethod -v CHAP`
  - 更新单向验证用户
-`iscsiadm -m node -T <iqn> -o update -n node.session.auth.username -v=<username>`
+`iscsiadm -m node -T <iqn> -o update -n node.session.auth.username -v <username>`
  - 更新单向验证密码
-`iscsiadm -m node -T <iqn> -o update -n node.session.auth.password -v=<password>`
+`iscsiadm -m node -T <iqn> -o update -n node.session.auth.password -v <password>`
  - 更新双向验证信息
-`iscsiadm -m node -T <iqn> -o update -n node.session.auth.username_in -v=<username>`
+`iscsiadm -m node -T <iqn> -o update -n node.session.auth.username_in -v <username>`
  - 更新双向验证密码
-`iscsiadm -m node -T <iqn> -o update -n node.session.auth.password_in -v=<password>`
+`iscsiadm -m node -T <iqn> -o update -n node.session.auth.password_in -v <password>`
 
 # 登出
 登出所有登入的target：

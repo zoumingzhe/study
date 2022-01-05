@@ -15,11 +15,16 @@ iSCSI 操作命令
 每次调用时生成一个唯一的iSCSI节点名称。
 
 ### /etc/iscsi/initiatorname.iscsi
+
+initiator名称配置文件。
+
 ```shell
 # 生成iqn
 echo "InitiatorName=`iscsi-iname`" > /etc/iscsi/initiatorname.iscsi
 # 定义别名
 echo "InitiatorAlias=<alias>" >> /etc/iscsi/initiatorname.iscsi
+# 查看配置
+cat /etc/iscsi/initiatorname.iscsi
 ```
 
 # [targetcli](https://github.com/Datera/targetcli)
