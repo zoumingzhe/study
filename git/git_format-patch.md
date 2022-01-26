@@ -10,9 +10,10 @@ git format-patch
  - “patch”，即提交与其父级之间的“diff -p --stat”输出（参见`git-diff`）。
 
 
-
+# 选项
  * -v, --reroll-count \<n>
 将该补丁集标记为第几次迭代。输出文件名前面有“v\<n>”，主题前缀（默认情况下为“PATCH”，但可通过--subject prefix选项配置）后面有“v\<n>”。
+
 
 # 参考
  * [Git - git-format-patch Documentation](https://git-scm.com/docs/git-format-patch)
