@@ -72,9 +72,9 @@ discovery.sendtargets.auth.password_in = <CHAP secret for clustered system>
  - 更新单向验证密码
 `iscsiadm -m node -T <iqn> -o update -n node.session.auth.password -v <password>`
  - 更新双向验证信息
-`iscsiadm -m node -T <iqn> -o update -n node.session.auth.username_in -v <username>`
+`iscsiadm -m node -T <iqn> -o update -n node.session.auth.username_in -v <mutual_username>`
  - 更新双向验证密码
-`iscsiadm -m node -T <iqn> -o update -n node.session.auth.password_in -v <password>`
+`iscsiadm -m node -T <iqn> -o update -n node.session.auth.password_in -v <mutual_password>`
 
 # 登出
 登出所有登入的target：
