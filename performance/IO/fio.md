@@ -29,14 +29,59 @@ fio [options] [job options] <job file(s)>
 ## fio job file
 ini文件格式
 
-## fio ioengine
-`fio --enghelp`
+## fio readwrite mode
+ - readwrite=str,rw=str
+    read            顺序读
+    write           顺序写
+    randwrite       随机写
+    randread        随机读
+    rw,readwrite    顺序混合读写
+    randrw          随机混合读写
+ - blocksize=int,bs=int
+ - size=int
+ - overwrite=bool
+ - rwmixread=int
+ - rwmixwrite=int
 
-## fio write log
- - write_bw_log
- - write_iops_log
- - write_lat_log
- - log_avg_msec
+## fio IO engine
+`fio --enghelp`
+ - ioengine=str
+
+## fio IO depth
+ - iodepth=int
+
+## fio IO type
+ - direct=bool
+ - buffered=bool
+
+## fio num threads
+ - numjobs=int
+
+## fio sync
+ - sync=bool
+ - fsync=int
+ - fdatasync=int
+ - create_fsync=bool
+ - fsync_on_close=bool
+ - end_fsync=bool
+
+## fio log
+ - write_bw_log=str
+ - write_iops_log=str
+ - write_lat_log=str
+ - log_avg_msec=int
+
+## fio think
+ - thinktime=int
+ - thinktime_spin=int
+ - thinktime_blocks-int
+
+## fio rate
+ - rate=int
+ - ratemin=int
+ - rate_iops=int
+ - rate_iops_min=int
+ - ratecycle=int
 
 # fio log file formats
 
