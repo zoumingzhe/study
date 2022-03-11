@@ -113,7 +113,7 @@ bcache支持三种缓存策略：writeback、writethrough、writearoud，缓存�
 `echo <cache_mode> > /sys/block/bcache<N>/bcache/cache_mode`
 ## 写命中write-hit
 对于writeback，先写入缓存盘，并使用dirty标志位记录缓存的修改。
-对于writeback，先写入缓存盘，再写入数据盘。
+对于writethrough，先写入缓存盘，再写入数据盘。
 对于writearoud，先使用dirty标志位记录缓存的修改，再写入数据盘。
 ## 写缺失write-miss
  - write allocate：将写入位置读入缓存盘，然后执行write-hit（写命中）操作。
