@@ -1,6 +1,6 @@
 [bcache](https://bcache.evilpiepirate.org/)
 ===========================================
-bcache（block cache）允许将SSD用作另一块设备（通常是机械盘盘或阵列）的读/写缓存（writeback）或读缓存（writethrough或writearound）。
+bcache（block cache）允许将一个块设备（通常是SSD或NVMe）用作另一个块设备（通常是HDD或阵列）的读/写缓存（writeback模式）或读缓存（writethrough模式或writearound模式）。
 
 # 警告
 ***操作前请备份重要数据。***
@@ -103,10 +103,11 @@ vim .config
 `cat /sys/block/bcache0/bcache/writeback_`
 
 # bcache缓存策略
-bcache支持三种缓存策略：writeback、writethrough、writearoud，缓存策略可动态修改，默认使用writethrough。
+bcache支持四种缓存策略：writeback、writethrough、writearoud、none，缓存策略可动态修改，默认使用writethrough。
  - writeback（写回）：数据先写入缓存盘，然后等待系统将数据回写入后端数据盘中。
  - writethrough（写通）：数据同时写入缓存盘和后端数据盘。
  - writearoud：数据直接写入后端数据盘。
+ - none：不使用缓存盘，读写IO均通过数据盘。
 ## 查看缓存策略
 `cat /sys/block/bcache<N>/bcache/cache_mode`
 ## 更改缓存策略
@@ -114,7 +115,7 @@ bcache支持三种缓存策略：writeback、writethrough、writearoud，缓存�
 ## 写命中write-hit
 对于writeback，先写入缓存盘，并使用dirty标志位记录缓存的修改。
 对于writethrough，先写入缓存盘，再写入数据盘。
-对于writearoud，先使用dirty标志位记录缓存的修改，再写入数据盘。
+对于writearoud，先将缓存的数据标记为无效，再写入数据盘。
 ## 写缺失write-miss
  - write allocate：将写入位置读入缓存盘，然后执行write-hit（写命中）操作。
  - no-write allocate：并不将写入位置读入缓存盘，而是直接将数据写入数据盘。
