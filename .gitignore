@@ -14,3 +14,6 @@ ChangeLog
 # windows
 Thumbs.db
 Thumbs.db:encryptable
+
+# drawio
+*.drawio.bkp
