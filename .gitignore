@@ -17,3 +17,6 @@ Thumbs.db:encryptable
 
 # drawio
 *.drawio.bkp
+
+# Symbolic Link
+storage/bcache
