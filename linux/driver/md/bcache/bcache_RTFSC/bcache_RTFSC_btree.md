@@ -63,7 +63,7 @@ static inline void SET_KEY_OFFSET(struct bkey *k, __u64 v)
 ```
 
 数据结构示意如下图：
-![bcache_bkey](./bcache_bkey/bcache_bkey.drawio.png)
+![bcache_bkey](../bcache_btree/bcache_bkey/bcache_bkey.drawio.png)
 
 # 参考
  * []()
