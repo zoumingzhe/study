@@ -1,5 +1,5 @@
-bcache btree
-============
+[bcache RTFSC](./) btree
+========================
 
 # bkey（btree keys）
 ```c
@@ -64,6 +64,81 @@ static inline void SET_KEY_OFFSET(struct bkey *k, __u64 v)
 
 数据结构示意如下图：
 ![bcache_bkey](../bcache_btree/bcache_bkey/bcache_bkey.drawio.png)
+
+## KEY_DIRTY
+若为writeback写，`bch_data_insert_start`会在插入的bkey前将dirty置位。
+```c
+static void bch_data_insert_start(struct closure *cl)
+{
+        ...
+
+        do {
+                ...
+
+                if (op->writeback) {
+                        SET_KEY_DIRTY(k, true);
+
+                        for (i = 0; i < KEY_PTRS(k); i++)
+                                SET_GC_MARK(PTR_BUCKET(op->c, k, i),
+                                            GC_MARK_DIRTY);
+                }
+
+                ...
+        } while (n != bio);
+
+        ...
+}
+```
+
+当`write_dirty_finish`时，若dirty被置位则将其清除并重新插入bkey。
+```c
+static void write_dirty_finish(struct closure *cl)
+{
+        ...
+
+        /* This is kind of a dumb way of signalling errors. */
+        if (KEY_DIRTY(&w->key)) {
+                ...
+                struct keylist keys;
+
+                bch_keylist_init(&keys);
+
+                bkey_copy(keys.top, &w->key);
+                SET_KEY_DIRTY(keys.top, false);
+                bch_keylist_push(&keys);
+
+                ...
+
+                ret = bch_btree_insert(dc->disk.c, &keys, NULL, &w->key);
+
+                if (ret)
+                        trace_bcache_writeback_collision(&w->key);
+
+                atomic_long_inc(ret
+                                ? &dc->disk.c->writeback_keys_failed
+                                : &dc->disk.c->writeback_keys_done);
+        }
+
+        ...
+}
+```
+
+需要注意的是，`dirty_endio`中将dirty清除只是用来标识`write_dirty`的io_error。因为，在`write_dirty_finish`中通过dirty标志位来判断是否出现io_error。同时，此处的bkey空间是为`write_dirty`而开辟的新空间，清除的并不是btree中实际的bkey上的dirty，所以不会有数据损坏的风险。
+```c
+static void dirty_endio(struct bio *bio)
+{
+        struct keybuf_key *w = bio->bi_private;
+        struct dirty_io *io = w->private;
+
+        if (bio->bi_status) {
+                SET_KEY_DIRTY(&w->key, false);
+                bch_count_backing_io_errors(io->dc, bio);
+        }
+
+        closure_put(&io->cl);
+}
+```
+
 
 # 参考
  * []()
