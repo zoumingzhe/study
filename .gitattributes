@@ -1,2 +1,5 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+*.pdf -text
+*.doc -text diff=pandoc
+*.docx -text diff=pandoc
