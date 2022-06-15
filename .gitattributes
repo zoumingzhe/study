@@ -3,3 +3,5 @@
 *.pdf -text
 *.doc -text diff=pandoc
 *.docx -text diff=pandoc
+*.vsd -text
+*.vsdx -text
