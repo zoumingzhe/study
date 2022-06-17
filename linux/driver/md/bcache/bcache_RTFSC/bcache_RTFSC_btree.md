@@ -2,6 +2,7 @@
 ========================
 
 # bkey（btree keys）
+bkey由高64位、低64位，以及一个64位数组组成。
 ```c
 /* Btree keys - all units are in sectors */
 
@@ -10,43 +11,6 @@ struct bkey {
         __u64   low;
         __u64   ptr[];
 };
-
-#define KEY_FIELD(name, field, offset, size)                            \
-        BITMASK(name, struct bkey, field, offset, size)
-
-#define PTR_FIELD(name, offset, size)                                   \
-static inline __u64 name(const struct bkey *k, unsigned int i)          \
-{ return (k->ptr[i] >> offset) & ~(~0ULL << size); }                    \
-                                                                        \
-static inline void SET_##name(struct bkey *k, unsigned int i, __u64 v)  \
-{                                                                       \
-        k->ptr[i] &= ~(~(~0ULL << size) << offset);                     \
-        k->ptr[i] |= (v & ~(~0ULL << size)) << offset;                  \
-}
-
-#define KEY_SIZE_BITS           16
-#define KEY_MAX_U64S            8
-
-KEY_FIELD(KEY_PTRS,     high, 60, 3)
-KEY_FIELD(__PAD0,       high, 58, 2)
-KEY_FIELD(KEY_CSUM,     high, 56, 2)
-KEY_FIELD(__PAD1,       high, 55, 1)
-KEY_FIELD(KEY_DIRTY,    high, 36, 1)
-
-KEY_FIELD(KEY_SIZE,     high, 20, KEY_SIZE_BITS)
-KEY_FIELD(KEY_INODE,    high, 0,  20)
-
-/* Next time I change the on disk format, KEY_OFFSET() won't be 64 bits */
-
-static inline __u64 KEY_OFFSET(const struct bkey *k)
-{
-        return k->low;
-}
-
-static inline void SET_KEY_OFFSET(struct bkey *k, __u64 v)
-{
-        k->low = v;
-}
 
 /*
  * The high bit being set is a relic from when we used it to do binary
@@ -59,11 +23,61 @@ static inline void SET_KEY_OFFSET(struct bkey *k, __u64 v)
         .low = (offset)                                                 \
 })
 
-#define KEY_START(k)                    (KEY_OFFSET(k) - KEY_SIZE(k))
+#define ZERO_KEY                        KEY(0, 0, 0)
+
+#define MAX_KEY_INODE                   (~(~0 << 20))
+#define MAX_KEY_OFFSET                  (~0ULL >> 1)
+#define MAX_KEY                         KEY(MAX_KEY_INODE, MAX_KEY_OFFSET, 0)
 ```
 
 数据结构示意如下图：
 ![bcache_bkey](../bcache_btree/bcache_bkey/bcache_bkey.drawio.png)
+
+## KEY_FIELD
+bkey的高64位由一系列位域组成。
+```c
+#define KEY_FIELD(name, field, offset, size)                            \
+        BITMASK(name, struct bkey, field, offset, size)
+
+#define KEY_SIZE_BITS           16
+#define KEY_MAX_U64S            8
+
+KEY_FIELD(KEY_PTRS,     high, 60, 3)
+KEY_FIELD(__PAD0,       high, 58, 2)
+KEY_FIELD(KEY_CSUM,     high, 56, 2)
+KEY_FIELD(__PAD1,       high, 55, 1)
+KEY_FIELD(KEY_DIRTY,    high, 36, 1)
+
+KEY_FIELD(KEY_SIZE,     high, 20, KEY_SIZE_BITS)
+KEY_FIELD(KEY_INODE,    high, 0,  20)
+```
+## KEY_INODE
+`KEY_INODE`是bkey数据对应backing的设备ID，共20位。这意味着理论上最多可以存在超过100w（1048576）个inode，但由于uuid槽位数的限制，实际上inode并不会有这么多。
+
+## KEY_SIZE
+`KEY_SIZE`是bkey数据对应的长度，共16位，单位sector。这意味着一个bkey最多可以有65536个sector，1个sector为512字节，则一个bkey最多表达32M数据。
+
+## KEY_OFFSET
+bkey的低64位是`KEY_OFFSET`，单位sector。它是bkey数据对应backing的截止位置，而不是对应的起始位置，这一点需要特别注意。
+```c
+/* Next time I change the on disk format, KEY_OFFSET() won't be 64 bits */
+
+static inline __u64 KEY_OFFSET(const struct bkey *k)
+{
+        return k->low;
+}
+```
+
+## KEY_START
+`KEY_START`是bkey数据对应backing的起始位置，单位sector。它需要由`KEY_OFFSET`减去`KEY_SIZE`计算得到。
+```c
+static inline void SET_KEY_OFFSET(struct bkey *k, __u64 v)
+{
+        k->low = v;
+}
+
+#define KEY_START(k)                    (KEY_OFFSET(k) - KEY_SIZE(k))
+```
 
 ## KEY_DIRTY
 若为writeback写，`bch_data_insert_start`会在插入的bkey前将dirty置位。
@@ -139,6 +153,29 @@ static void dirty_endio(struct bio *bio)
 }
 ```
 
+## PTR_FIELD
+```c
+#define PTR_FIELD(name, offset, size)                                   \
+static inline __u64 name(const struct bkey *k, unsigned int i)          \
+{ return (k->ptr[i] >> offset) & ~(~0ULL << size); }                    \
+                                                                        \
+static inline void SET_##name(struct bkey *k, unsigned int i, __u64 v)  \
+{                                                                       \
+        k->ptr[i] &= ~(~(~0ULL << size) << offset);                     \
+        k->ptr[i] |= (v & ~(~0ULL << size)) << offset;                  \
+}
+
+#define PTR_DEV_BITS                    12
+
+PTR_FIELD(PTR_DEV,                      51, PTR_DEV_BITS)
+PTR_FIELD(PTR_OFFSET,                   8,  43)
+PTR_FIELD(PTR_GEN,                      0,  8)
+
+#define PTR_CHECK_DEV                   ((1 << PTR_DEV_BITS) - 1)
+
+#define MAKE_PTR(gen, offset, dev)                                      \
+        ((((__u64) dev) << 51) | ((__u64) offset) << 8 | gen)
+```
 
 # 参考
  * []()
