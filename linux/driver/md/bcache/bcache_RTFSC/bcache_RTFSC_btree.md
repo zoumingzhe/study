@@ -33,8 +33,22 @@ struct bkey {
 数据结构示意如下图：
 ![bcache_bkey](../bcache_btree/bcache_bkey/bcache_bkey.drawio.png)
 
-## KEY_FIELD
-bkey的高64位由一系列位域组成。
+## bkey pad
+### BKEY_PAD
+```c
+/* Enough for a key with 6 pointers */
+#define BKEY_PAD                8
+```
+
+### BKEY_PADDED
+```c
+#define BKEY_PADDED(key)                                        \
+        union { struct bkey key; __u64 key ## _pad[BKEY_PAD]; }
+```
+
+## bkey key
+### KEY_FIELD
+bkey的高64位是由一系列位域组成。
 ```c
 #define KEY_FIELD(name, field, offset, size)                            \
         BITMASK(name, struct bkey, field, offset, size)
@@ -51,13 +65,14 @@ KEY_FIELD(KEY_DIRTY,    high, 36, 1)
 KEY_FIELD(KEY_SIZE,     high, 20, KEY_SIZE_BITS)
 KEY_FIELD(KEY_INODE,    high, 0,  20)
 ```
-## KEY_INODE
+
+### KEY_INODE
 `KEY_INODE`是bkey数据对应backing的设备ID，共20位。这意味着理论上最多可以存在超过100w（1048576）个inode，但由于uuid槽位数的限制，实际上inode并不会有这么多。
 
-## KEY_SIZE
+### KEY_SIZE
 `KEY_SIZE`是bkey数据对应的长度，共16位，单位sector。这意味着一个bkey最多可以有65536个sector，1个sector为512字节，则一个bkey最多表达32M数据。
 
-## KEY_OFFSET
+### KEY_OFFSET
 bkey的低64位是`KEY_OFFSET`，单位sector。它是bkey数据对应backing的截止位置，而不是对应的起始位置，这一点需要特别注意。
 ```c
 /* Next time I change the on disk format, KEY_OFFSET() won't be 64 bits */
@@ -68,7 +83,7 @@ static inline __u64 KEY_OFFSET(const struct bkey *k)
 }
 ```
 
-## KEY_START
+### KEY_START
 `KEY_START`是bkey数据对应backing的起始位置，单位sector。它需要由`KEY_OFFSET`减去`KEY_SIZE`计算得到。
 ```c
 static inline void SET_KEY_OFFSET(struct bkey *k, __u64 v)
@@ -79,7 +94,7 @@ static inline void SET_KEY_OFFSET(struct bkey *k, __u64 v)
 #define KEY_START(k)                    (KEY_OFFSET(k) - KEY_SIZE(k))
 ```
 
-## KEY_DIRTY
+### KEY_DIRTY
 若为writeback写，`bch_data_insert_start`会在插入的bkey前将dirty置位。
 ```c
 static void bch_data_insert_start(struct closure *cl)
@@ -153,7 +168,8 @@ static void dirty_endio(struct bio *bio)
 }
 ```
 
-## PTR_FIELD
+## bkey pointer
+### PTR_FIELD
 ```c
 #define PTR_FIELD(name, offset, size)                                   \
 static inline __u64 name(const struct bkey *k, unsigned int i)          \
@@ -175,6 +191,139 @@ PTR_FIELD(PTR_GEN,                      0,  8)
 
 #define MAKE_PTR(gen, offset, dev)                                      \
         ((((__u64) dev) << 51) | ((__u64) offset) << 8 | gen)
+```
+
+### PTR_DEV
+
+### PTR_GEN
+
+### PTR_OFFSET
+
+### PTR_CACHE
+```c
+static inline struct cache *PTR_CACHE(struct cache_set *c,
+                                      const struct bkey *k,
+                                      unsigned int ptr)
+{
+        return c->cache[PTR_DEV(k, ptr)];
+}
+```
+
+### PTR_BUCKET
+```c
+static inline size_t sector_to_bucket(struct cache_set *c, sector_t s)
+{
+        return s >> c->bucket_bits;
+}
+
+static inline size_t PTR_BUCKET_NR(struct cache_set *c,
+                                   const struct bkey *k,
+                                   unsigned int ptr)
+{
+        return sector_to_bucket(c, PTR_OFFSET(k, ptr));
+}
+
+static inline struct bucket *PTR_BUCKET(struct cache_set *c,
+                                        const struct bkey *k,
+                                        unsigned int ptr)
+{
+        return PTR_CACHE(c, k, ptr)->buckets + PTR_BUCKET_NR(c, k, ptr);
+}
+```
+
+## bkey utility
+
+### bkey_bytes
+```c
+static inline unsigned long bkey_u64s(const struct bkey *k)
+{
+        return (sizeof(struct bkey) / sizeof(__u64)) + KEY_PTRS(k);
+}
+
+static inline unsigned long bkey_bytes(const struct bkey *k)
+{
+        return bkey_u64s(k) * sizeof(__u64);
+}
+```
+
+### bkey_init
+```c
+static inline void bkey_init(struct bkey *k)
+{
+        *k = ZERO_KEY;
+}
+```
+
+### bkey_cmp
+```c
+static __always_inline int64_t bkey_cmp(const struct bkey *l,
+                                        const struct bkey *r)
+{
+        return unlikely(KEY_INODE(l) != KEY_INODE(r))
+                ? (int64_t) KEY_INODE(l) - (int64_t) KEY_INODE(r)
+                : (int64_t) KEY_OFFSET(l) - (int64_t) KEY_OFFSET(r);
+}
+```
+
+### bkey_copy
+```c
+#define bkey_copy(_dest, _src)	memcpy(_dest, _src, bkey_bytes(_src))
+
+static inline void bkey_copy_key(struct bkey *dest, const struct bkey *src)
+{
+        SET_KEY_INODE(dest, KEY_INODE(src));
+        SET_KEY_OFFSET(dest, KEY_OFFSET(src));
+}
+```
+
+### bkey_next
+```c
+static inline struct bkey *bkey_next(const struct bkey *k)
+{
+        __u64 *d = (void *) k;
+        return (struct bkey *) (d + bkey_u64s(k));
+}
+```
+
+### bkey_idx
+```c
+static inline struct bkey *bkey_idx(const struct bkey *k, unsigned nr_keys)
+{
+        __u64 *d = (void *) k;
+        return (struct bkey *) (d + nr_keys);
+}
+```
+
+## keylist
+```c
+struct keylist {
+        union {
+                struct bkey             *keys;
+                uint64_t                *keys_p;
+        };
+        union {
+                struct bkey             *top;
+                uint64_t                *top_p;
+        };
+
+        /* Enough room for btree_split's keys without realloc */
+#define KEYLIST_INLINE          16
+        uint64_t                inline_keys[KEYLIST_INLINE];
+};
+```
+
+### bch_keylist_init
+```c
+static inline void bch_keylist_init(struct keylist *l)
+{
+        l->top_p = l->keys_p = l->inline_keys;
+}
+
+static inline void bch_keylist_init_single(struct keylist *l, struct bkey *k)
+{
+        l->keys = k;
+        l->top = bkey_next(k);
+}
 ```
 
 # 参考
