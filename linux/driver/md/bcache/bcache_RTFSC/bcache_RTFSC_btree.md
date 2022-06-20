@@ -67,7 +67,7 @@ KEY_FIELD(KEY_INODE,    high, 0,  20)
 ```
 
 ### KEY_INODE
-`KEY_INODE`是bkey数据对应backing的设备ID，共20位。这意味着理论上最多可以存在超过100w（1048576）个inode，但由于uuid槽位数的限制，实际上inode并不会有这么多。
+`KEY_INODE`是bkey数据对应backing的设备ID，共20位。这意味着理论上每个cache_set最多可以支持超过100w（1048576）个inode，但由于uuid槽位数的限制，实际上inode并不会有这么多。
 
 ### KEY_SIZE
 `KEY_SIZE`是bkey数据对应的长度，共16位，单位sector。这意味着一个bkey最多可以有65536个sector，1个sector为512字节，则一个bkey最多表达32M数据。
@@ -194,10 +194,14 @@ PTR_FIELD(PTR_GEN,                      0,  8)
 ```
 
 ### PTR_DEV
+`PTR_DEV`是bkey数据在对应cache设备的ID，共12位。这意味着理论上每个cache_set最多可以支持4096个cache设备，但是4095被用作`CHECK_DEV`。
 
 ### PTR_GEN
+`PTR_GEN`是bkey数据在对应cache设备中所在bucket的变更号，共8位。
 
 ### PTR_OFFSET
+`PTR_OFFSET`是bkey数据在对应cache设备中的起始位置，共43位，单位sector。
+和`KEY_OFFSET`有所区别的是：`PTR_OFFSET`是起始位置，而`KEY_OFFSET`则是截止位置。
 
 ### PTR_CACHE
 ```c
