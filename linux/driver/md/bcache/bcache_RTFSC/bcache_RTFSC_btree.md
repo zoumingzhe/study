@@ -271,7 +271,7 @@ static __always_inline int64_t bkey_cmp(const struct bkey *l,
 
 ### bkey_copy
 ```c
-#define bkey_copy(_dest, _src)	memcpy(_dest, _src, bkey_bytes(_src))
+#define bkey_copy(_dest, _src)  memcpy(_dest, _src, bkey_bytes(_src))
 
 static inline void bkey_copy_key(struct bkey *dest, const struct bkey *src)
 {
@@ -327,6 +327,64 @@ static inline void bch_keylist_init_single(struct keylist *l, struct bkey *k)
 {
         l->keys = k;
         l->top = bkey_next(k);
+}
+```
+
+### bch_keylist_push
+```c
+static inline void bch_keylist_push(struct keylist *l)
+{
+        l->top = bkey_next(l->top);
+}
+```
+
+### bch_keylist_add
+```c
+static inline void bch_keylist_add(struct keylist *l, struct bkey *k)
+{
+        bkey_copy(l->top, k);
+        bch_keylist_push(l);
+}
+```
+
+### bch_keylist_empty
+```c
+static inline bool bch_keylist_empty(struct keylist *l)
+{
+        return l->top == l->keys;
+}
+```
+
+### bch_keylist_reset
+```c
+static inline void bch_keylist_reset(struct keylist *l)
+{
+        l->top = l->keys;
+}
+```
+
+### bch_keylist_free
+```c
+static inline void bch_keylist_free(struct keylist *l)
+{
+        if (l->keys_p != l->inline_keys)
+                kfree(l->keys_p);
+}
+```
+
+### bch_keylist_nkeys
+```c
+static inline size_t bch_keylist_nkeys(struct keylist *l)
+{
+        return l->top_p - l->keys_p;
+}
+```
+
+### bch_keylist_bytes
+```c
+static inline size_t bch_keylist_bytes(struct keylist *l)
+{
+        return bch_keylist_nkeys(l) * sizeof(uint64_t);
 }
 ```
 
