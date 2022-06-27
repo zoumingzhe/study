@@ -11,6 +11,5 @@ Patricia的基本思想是构建一个二叉树，在每个节点中都存储有
 Radix树是一种多叉搜索树。树的叶子结点是实际的数据条目。每一个结点有一个固定的、2^n指针指向子结点（每一个指针称为槽slot，n为划分的基的大小）。
 
 # 参考
-1.[Radix树](https://baike.baidu.com/item/Radix%E6%A0%91)
-
-2.[查找——图文翔解RadixTree（基数树）](https://www.cnblogs.com/wgwyanfs/p/6887889.html)
+ - [Radix树](https://baike.baidu.com/item/Radix%E6%A0%91)
+ - [查找——图文翔解RadixTree（基数树）](https://www.cnblogs.com/wgwyanfs/p/6887889.html)
