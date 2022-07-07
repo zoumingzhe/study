@@ -3,4 +3,4 @@ fdisk
 fdisk
 
 # 参考
- * [fdisk](fdisk)
+ * [Linux fdisk 命令](https://www.runoob.com/linux/linux-comm-fdisk.html)
