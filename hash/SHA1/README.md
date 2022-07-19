@@ -5,4 +5,4 @@ SHA-1（英语：Secure Hash Algorithm 1，中文名：安全散列算法1）是
 [SHA1均匀性](./SHA1均匀性)
 
 # 参考
-1.[SHA1](https://baike.baidu.com/item/SHA-1)
+ * [SHA1](https://baike.baidu.com/item/SHA-1)
