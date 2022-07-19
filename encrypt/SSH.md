@@ -12,12 +12,12 @@ SSH协议族可以用来进行远程控制，或在计算机之间传送文件�
 
 # SSH操作
 ## 获取密钥
- - ssh-keygen -t [rsa|dsa] : 生成私钥（id_rsa|id_dsa）与公钥（id_rsa.pub|id_dsa.pub）对
- - cat ~/.ssh/（id_rsa.pub|id_dsa.pub） : 查看本机当前用户的公钥（id_rsa.pub|id_dsa.pub）
+ - `ssh-keygen -t [rsa|dsa]` : 生成私钥（id_rsa|id_dsa）与公钥（id_rsa.pub|id_dsa.pub）对
+ - `cat ~/.ssh/<id_rsa.pub|id_dsa.pub>` : 查看本机当前用户的公钥（id_rsa.pub|id_dsa.pub）
 ## 免密登陆
- - ssh-keygen -t [rsa|dsa] : 生成私钥（id_rsa|id_dsa）与公钥（id_rsa.pub|id_dsa.pub）对
- - ssh-copy-id [user@]hostname : 将本机当前用户的公钥（id_rsa.pub|id_dsa.pub）复制到远程主机（~/.ssh/authorized_keys）中，该命令执行需要输入远程主机user的password
- - cat ~/.ssh/（id_rsa.pub|id_dsa.pub） : 查看本机当前用户的公钥（id_rsa.pub|id_dsa.pub）并发送给远程主机的user，让远程主机的user将本机当前用户的公钥（id_rsa.pub|id_dsa.pub）写入（~/.ssh/authorized_keys）中
+ - `ssh-keygen -t [rsa|dsa]` : 生成私钥（id_rsa|id_dsa）与公钥（id_rsa.pub|id_dsa.pub）对
+ - `ssh-copy-id [user@]hostname` : 将本机当前用户的公钥（id_rsa.pub|id_dsa.pub）复制到远程主机（`~/.ssh/authorized_keys`）中，该命令执行需要输入远程主机user的password
+ - `cat ~/.ssh/<id_rsa.pub|id_dsa.pub>` : 查看本机当前用户的公钥（id_rsa.pub|id_dsa.pub）并发送给远程主机的user，让远程主机的user将本机当前用户的公钥（id_rsa.pub|id_dsa.pub）写入（~/.ssh/authorized_keys）中
 
 # 参考
 1.[SSH](https://baike.baidu.com/item/ssh/10407)
