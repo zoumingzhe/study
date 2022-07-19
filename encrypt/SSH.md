@@ -20,6 +20,5 @@ SSH协议族可以用来进行远程控制，或在计算机之间传送文件�
  - `cat ~/.ssh/<id_rsa.pub|id_dsa.pub>` : 查看本机当前用户的公钥（id_rsa.pub|id_dsa.pub）并发送给远程主机的user，让远程主机的user将本机当前用户的公钥（id_rsa.pub|id_dsa.pub）写入（~/.ssh/authorized_keys）中
 
 # 参考
-1.[SSH](https://baike.baidu.com/item/ssh/10407)
-
-2.[OpenSSH](https://baike.baidu.com/item/OpenSSH)
+ * [SSH](https://baike.baidu.com/item/ssh/10407)
+ * [OpenSSH](https://baike.baidu.com/item/OpenSSH)
