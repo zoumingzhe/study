@@ -1,7 +1,7 @@
 partprobe
 =========
 
-```shell
+```text
 Usage: partprobe [OPTION] [DEVICE]...
 Inform the operating system about partition table changes.
 
@@ -11,6 +11,8 @@ Inform the operating system about partition table changes.
   -v, --version    output version information and exit
 
 When no DEVICE is given, probe all partitions.
+
+Report bugs to <bug-parted@gnu.org>.
 ```
 
 # 参考

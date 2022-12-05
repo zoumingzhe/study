@@ -3,7 +3,7 @@ blkid
 
 blkid - locate/print block device attributes
 
-```shell
+```text
 Usage:
  blkid --label <label> | --uuid <uuid>
 

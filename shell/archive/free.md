@@ -1,5 +1,7 @@
 free
 ====
+
+```text
 Usage:
  free [options]
 
@@ -25,6 +27,7 @@ Options:
 
      --help     display this help and exit
  -V, --version  output version information and exit
+```
 
 # 参考
  * [Linux free 命令](https://www.runoob.com/linux/linux-comm-free.html)

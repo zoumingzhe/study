@@ -1,9 +1,11 @@
 uptime
 ======
-Usage:
- uptime [options]
 
 uptime命令可以显示最近1min、5min、15min内系统的平均负载（在队列中等待执行的进程数量）。
+
+```shell
+Usage:
+ uptime [options]
 
 Options:
  -p, --pretty   show uptime in pretty format
@@ -11,6 +13,8 @@ Options:
  -s, --since    system up since
  -V, --version  output version information and exit
 
+For more details see uptime(1).
+```
 
 # 参考
  * []()

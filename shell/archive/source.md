@@ -1,10 +1,12 @@
 source
 ======
-source filename [arg]
- - filename：文件名。
- - arg：参数。
 
 source（点）命令用于在当前shell中读取并执行filename文件中的命令。
+
+`source filename [arg]`
+
+ - `$PATH`变量中的条目被用于寻找包含`FILENAME`文件的目录。
+ - 如果提供了任何的`ARGUMENTS`参数，则它们将成为`FILENAME`文件执行时的位置参数。
 
 *注：该命令通常用命令“.”来替代。
 ```shell

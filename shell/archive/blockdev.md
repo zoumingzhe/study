@@ -1,7 +1,7 @@
 blockdev
 ========
 
-```shell
+```text
 Usage:
  blockdev -V
  blockdev --report [devices]

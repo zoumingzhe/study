@@ -1,7 +1,7 @@
 blkdiscard
 ==========
 
-```shell
+```text
 Usage:
  blkdiscard [options] <device>
 
