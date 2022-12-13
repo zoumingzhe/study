@@ -29,7 +29,6 @@ dmsetup create device_name [-n|--notable|--table table|
 
 有关表格格式的更多信息，请参见下文。
 
-
 ```shell
 dmsetup create --concise [concise_device_specification]
 ```
