@@ -19,5 +19,5 @@ Thumbs.db:encryptable
 *.drawio.bkp
 
 # Symbolic Link
-storage/bcache
+storage-存储/bcache
 RTFSC/bcache
