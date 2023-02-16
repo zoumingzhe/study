@@ -51,40 +51,40 @@ Shell的各参数值。\$1是第1参数，\$2是第2参数，......。
 
 
 # 目录
-| Command                                | Linux | Windows |
-| :------------------------------------- | :---: | :-----: |
-| [awk](./archive/awk.md)                |   Y   |         |
-| [cat](./archive/cat.md)                |   Y   |         |
-| [cd](./archive/cd.md)                  |   Y   |    Y    |
-| [chmod](./archive/chmod.md)            |   Y   |         |
-| [cp](./archive/cp.md)                  |   Y   |         |
-| [crontab](./archive/crontab.md)        |   Y   |         |
-| [dd](./archive/dd.md)                  |   Y   |         |
-| [df](./archive/df.md)                  |   Y   |         |
-| [fdisk](./archive/fdisk.md)            |   Y   |         |
-| [free](./archive/free.md)              |   Y   |         |
-| [grep](./archive/grep.md)              |   Y   |         |
-| [head](./archive/head.md)              |   Y   |         |
-| [kill](./archive/kill.md)              |   Y   |         |
-| [less](./archive/less.md)              |   Y   |         |
-| [ls](./archive/ls.md)                  |   Y   |         |
-| [mkdir](./archive/mkdir.md)            |   Y   |    Y    |
-| [more](./archive/more.md)              |   Y   |         |
-| [mv](./archive/mv.md)                  |   Y   |         |
-| [nohup](./archive/nohup.md)            |   Y   |         |
-| [nslookup](./archive/nslookup.md)      |   Y   |    Y    |
-| [ping](./archive/ping.md)              |   Y   |    Y    |
-| [ps](./archive/ps.md)                  |   Y   |         |
-| [pwd](./archive/pwd.md)                |   Y   |         |
-| [rm](./archive/rm.md)                  |   Y   |         |
-| [rmdir](./archive/rmdir.md)            |   Y   |         |
-| [sed](./archive/sed.md)                |   Y   |         |
-| [source](./archive/source.md)          |   Y   |         |
-| [su](./archive/su.md)                  |   Y   |         |
-| [tail](./archive/tail.md)              |   Y   |         |
-| [taskset](./archive/taskset.md)        |   Y   |         |
-| [uptime](./archive/uptime.md)          |   Y   |         |
-| [wait](./archive/wait.md)              |   Y   |         |
+| Command                           | Linux | Windows |
+| :-------------------------------- | :---: | :-----: |
+| [awk](./archive/awk.md)           |   Y   |         |
+| [cat](./archive/cat.md)           |   Y   |         |
+| [cd](./archive/cd.md)             |   Y   |    Y    |
+| [chmod](./archive/chmod.md)       |   Y   |         |
+| [cp](./archive/cp.md)             |   Y   |         |
+| [crontab](./archive/crontab.md)   |   Y   |         |
+| [dd](./archive/dd.md)             |   Y   |         |
+| [df](./archive/df.md)             |   Y   |         |
+| [fdisk](./archive/fdisk.md)       |   Y   |         |
+| [free](./archive/free.md)         |   Y   |         |
+| [grep](./archive/grep.md)         |   Y   |         |
+| [head](./archive/head.md)         |   Y   |         |
+| [kill](./archive/kill.md)         |   Y   |         |
+| [less](./archive/less.md)         |   Y   |         |
+| [ls](./archive/ls.md)             |   Y   |         |
+| [mkdir](./archive/mkdir.md)       |   Y   |    Y    |
+| [more](./archive/more.md)         |   Y   |         |
+| [mv](./archive/mv.md)             |   Y   |         |
+| [nohup](./archive/nohup.md)       |   Y   |         |
+| [nslookup](./archive/nslookup.md) |   Y   |    Y    |
+| [ping](./archive/ping.md)         |   Y   |    Y    |
+| [ps](./archive/ps.md)             |   Y   |         |
+| [pwd](./archive/pwd.md)           |   Y   |         |
+| [rm](./archive/rm.md)             |   Y   |         |
+| [rmdir](./archive/rmdir.md)       |   Y   |         |
+| [sed](./archive/sed.md)           |   Y   |         |
+| [source](./archive/source.md)     |   Y   |         |
+| [su](./archive/su.md)             |   Y   |         |
+| [tail](./archive/tail.md)         |   Y   |         |
+| [taskset](./archive/taskset.md)   |   Y   |         |
+| [uptime](./archive/uptime.md)     |   Y   |         |
+| [wait](./archive/wait.md)         |   Y   |         |
 
 # 参考
 1.[shell](https://baike.baidu.com/item/shell)
