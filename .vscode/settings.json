@@ -1,0 +1,11 @@
+{
+    // markdownlint
+    "markdownlint.config": {
+        "MD003": {
+            "style": "setext_with_atx_closed"
+        },
+        "MD004": {
+            "style": "sublist"
+        }
+    },
+}
