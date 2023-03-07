@@ -14,12 +14,19 @@ git send-email
  2. Greg Kroah-Hartman 的send_lots_of_email.pl 脚本使用的原始格式
 这种格式要求文件的第一行包含“Cc:”，并且消息的“Subject:”作为第二行。
 
-## 选项
+配置
+----
+
+使用 `send-email` 命令前应当确保配置中 [sendemail](./git_config.md#sendemail) 正确。
+
+选项
+----
 
 - --in-reply-to \<identifier>
 使第一封邮件（或所有带有`--no-thread`的邮件）显示为对给定Message-Id的回复，从而避免中断线程以提供新的补丁集。第二封和随后的电子邮件将根据`--[no-]chain-reply-to`设置作为回复发送。
 
-## 参考
+参考
+----
 
 - [Git - git-send-email Documentation](https://git-scm.com/docs/git-send-email)
 - [git send-email](https://cloud.tencent.com/developer/section/1138666)

@@ -29,6 +29,22 @@ core
 指定是否忽略大小写，以使 Git 在不区分大小写的文件系统（如 APFS、HFS+、FAT、NTFS 等）上更好地工作。
 当配置文件中未指定 core.ignorecase 时，默认为 false。
 
+sendemail
+---------
+
+通常，可在全局配置（`~/.gitconfig`）中增加如下配置段：
+
+```text
+[sendemail]
+        smtpEncryption = tls
+        smtpServer = smtp.gmail.com
+        smtpServerPort = 587
+        smtpUser = username@gmail.cn
+        smtpPass = password
+```
+
+关于smtp的更多配置信息（如域名、服务端口等），可参考邮件服务提供商的帮助文档。
+
 参考
 ----
 
