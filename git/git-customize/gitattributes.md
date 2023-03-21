@@ -17,6 +17,7 @@ pattern attr1 attr2 ...
 - 以双引号开头的模式以C风格引用。
 - 当模式与路径匹配时，该行中列出的属性将被赋予该路径。
 
-## 参考
+参考
+----
 
 - [Git - gitattributes Documentation](https://git-scm.com/docs/gitattributes)
