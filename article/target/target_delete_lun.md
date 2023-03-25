@@ -6,7 +6,7 @@ target delete lun
 
 在一个使用multipath和iSCSI为ceph rbd提供高可用的场景中，其中一个backstore由于被添加了blacklist需要重建。
 
-![target_delete_lun](.drawio/target_delete_lun.drawio.png)
+![target_delete_lun](.png/target_delete_lun.drawio.png)
 
 当delete lun之后，上层出现io error导致IO中断，而预期是multipath自动隔离故障路径，并在其他路径重发IO。
 
