@@ -1,16 +1,18 @@
 python class
 ============
 
-# magic methods
+magic methods
+-------------
 
-## __init__()
+### __init__()
 
-## __new__()
+### __new__()
 
-## __del__()
+### __del__()
 
-## __str__()
+### __str__()
 
+参考
+----
 
-# 参考
- - [9. 类 — Python 3.11.0 文档](https://docs.python.org/zh-cn/3/tutorial/classes.html)
+- [9. 类 — Python 3.11.0 文档](https://docs.python.org/zh-cn/3/tutorial/classes.html)

@@ -1,11 +1,12 @@
-python iterator
-===============
+python iterator —— 迭代器
+=========================
 
 任何实现了__iter__()和__next__()方法的对象都是迭代器。__iter__返回一个可迭代对象，__next__返回迭代器的下一个值。
 
-**注意：__next__()方法为Python3中迭代器的定义，Python2中迭代器的定义是next()方法。**
+**注意：**next**()方法为Python3中迭代器的定义，Python2中迭代器的定义是next()方法。**
 
 示例1：
+
 ```python
 class Fib():
     def __init__(self, max):
@@ -38,6 +39,7 @@ print(next(f)) # StopIteration
 ```
 
 示例2：
+
 ```python
 class Container:
     def __init__(self):
