@@ -1,10 +1,13 @@
-python module os
-================
+python library os
+=================
+
 本模块提供了一种使用与操作系统相关的功能的便捷式途径。 如果你只是想读写一个文件，请参阅 `open()`，如果你想操作文件路径，请参阅 `os.path` 模块，如果你想读取通过命令行给出的所有文件中的所有行，请参阅 `fileinput` 模块。 为了创建临时文件和目录，请参阅 `tempfile` 模块，对于高级文件和目录处理，请参阅 `shutil` 模块。
 
-# os.system
+os.system
+---------
 
-# os.popen
+os.popen
+--------
 
 ```python
 # VxWorks has no user space shell provided. As a result, running
@@ -58,5 +61,7 @@ if sys.platform != 'vxworks':
     __all__.append("popen")
 ```
 
-# 参考
- - [os --- 多种操作系统接口](https://docs.python.org/zh-cn/3/library/os.html)
+参考
+----
+
+- [os --- 多种操作系统接口](https://docs.python.org/zh-cn/3/library/os.html)

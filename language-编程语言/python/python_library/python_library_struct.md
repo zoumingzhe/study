@@ -1,5 +1,5 @@
-python module struct
-====================
+python library struct
+=====================
 
 将字节串解读为打包的二进制数据
 
