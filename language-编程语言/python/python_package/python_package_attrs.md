@@ -21,4 +21,5 @@ python package [attrs](https://www.attrs.org/)
 参考
 ----
 
+- [python-attrs/attrs: Python Classes Without Boilerplate](https://github.com/python-attrs/attrs)
 - [Best Practice in Python 3 for Type Annotation? · Issue #582 · python-attrs/attrs](https://github.com/python-attrs/attrs/issues/582)
