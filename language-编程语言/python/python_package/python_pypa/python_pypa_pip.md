@@ -1,5 +1,5 @@
-python [pip](https://pypi.org/project/pip/)
-===========================================
+python PyPA [pip](https://pip.pypa.io/en/stable/)
+=================================================
 
 pip is the package installer for Python.
 
@@ -34,5 +34,6 @@ pip 中国大陆镜像：
 参考
 ----
 
-- [pip](https://pip.pypa.io/en/stable/)
+- [pip · PyPI](https://pypi.org/project/pip/)
+- [pypa/pip: The Python package installer](https://github.com/pypa/pip)
 - [Python pip 安装与使用](https://www.runoob.com/w3cnote/python-pip-install-usage.html)
