@@ -1,9 +1,9 @@
-python PyPA
-===========
+python [PyPA](https://www.pypa.io/)
+===================================
 
 The Python Packaging Authority
 
 参考
 ----
 
-- [Python Packaging Authority — PyPA documentation](https://www.pypa.io/)
+- [Python Packaging Authority](https://github.com/pypa)
