@@ -1,9 +1,12 @@
 # bcache crash
 
+## symbolic
+
 Loads symbolic and debugging data:
 
-```shell
+```text
 crash> mod -s bcache
+crash> sym -m bcache
 ```
 
 ## view structure
@@ -20,7 +23,18 @@ struct list_head {
 }
 ```
 
-通过 "next" 查看所有 cache_set 地址：
+使用 list 命令查看链表：
+
+```text
+crash> list bch_cache_sets
+ffffffffc0248830
+ffff985f5bae0050
+ffff985f63760050
+ffff985f58880050
+ffff985fbd600050
+```
+
+或者，通过 "next" 逐个查看所有 cache_set 地址：
 
 ```text
 crash> struct list_head bch_cache_sets
