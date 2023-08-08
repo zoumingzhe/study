@@ -13,65 +13,56 @@ crash> sym -m bcache
 
 ### cache_set
 
-所有 cache_set 都在 bch_cache_sets 链中：
+所有`cache_set`都在`bch_cache_sets`链中，使用`list`命令查看链表：
 
 ```text
-crash> struct list_head bch_cache_sets
-struct list_head {
-  next = 0xffffa02fc4e60050,
-  prev = 0xffff802f041e0050
-}
+crash> list -H bch_cache_sets
+ffff802f70dc0050
+ffffa02f74da0050
+ffffa03fdd540050
+ffffa03fde4c0050
 ```
 
-使用 list 命令查看链表：
+或者，查看链表中所有结构体对象的成员：
 
-```text
-crash> list bch_cache_sets
-ffffffffc0248830
-ffff985f5bae0050
-ffff985f63760050
-ffff985f58880050
-ffff985fbd600050
+```shell
+list -s cache_set.nr_uuids -l cache_set.list -H bch_cache_sets
 ```
 
-或者，通过 "next" 逐个查看所有 cache_set 地址：
+通过`cache_set.list`地址查看`cache_set`的完整结构体：
 
-```text
-crash> struct list_head bch_cache_sets
-struct list_head {
-  next = 0xffffa02fc4e60050,
-  prev = 0xffff802f041e0050
-}
-crash> struct list_head 0xffffa02fc4e60050
-struct list_head {
-  next = 0xffff802f055c0050,
-  prev = 0xffff0000089d0700
-}
-crash> struct list_head 0xffff802f055c0050
-struct list_head {
-  next = 0xffff802f041e0050,
-  prev = 0xffffa02fc4e60050
-}
-crash> struct list_head 0xffff802f041e0050
-struct list_head {
-  next = 0xffff0000089d0700,
-  prev = 0xffff802f055c0050
-}
-crash> struct list_head 0xffff0000089d0700
-struct list_head {
-  next = 0xffffa02fc4e60050,
-  prev = 0xffff802f041e0050
-}
+```shell
+cache_set -l cache_set.list 0xffffa02fc4e60050
 ```
 
-通过 "cache_set.list" 地址查看 cache_set 信息：
+或者，直接直接查看结构体下的`cache_set.journal`成员：
 
-```text
-crash> cache_set -l "cache_set.list" 0xffffa02fc4e60050
+```shell
+cache_set.journal -l cache_set.list 0xffffa02fc4e60050
 ```
 
-或者直接查看 "cache_set.journal" 信息：
+### cached_dev
 
-```text
-crash> cache_set.journal -l "cache_set.list" 0xffffa02fc4e60050
+所有`attach`状态`cached_dev`都在`cache_set`下的`cached_devs`链中：
+
+```shell
+list -s cache_set.cached_devs -l cache_set.list -H bch_cache_sets
+```
+
+或者，所有`detach`状态`cached_dev`都在`uncached_devices`链中：
+
+```shell
+list -H uncached_devices
+```
+
+#### 查看 cache_set.cached_devs 链表
+
+```shell
+list -s cached_dev.has_dirty -l cached_dev.list ffff803f25310000
+```
+
+#### 查找 cached_dev 下的所有 dirty_io
+
+```shell
+search -k ffff803ef4d60000 | awk -F ':' '{print "dirty_io.cl.fn -l dirty_io.dc " $1}'
 ```
