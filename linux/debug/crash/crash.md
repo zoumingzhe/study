@@ -1,6 +1,13 @@
 linux crash
 ===========
 
+trigger kernel crash
+--------------------
+
+```shell
+echo c > /proc/sysrq-trigger
+```
+
 bt 查看堆栈
 ------------
 
@@ -8,6 +15,12 @@ bt 查看堆栈
 
 ```shell
 bt -f [pid | task]
+```
+
+或者，使用`-F`显示符号：
+
+```shell
+bt -F [pid | task]
 ```
 
 查看所有堆栈：
